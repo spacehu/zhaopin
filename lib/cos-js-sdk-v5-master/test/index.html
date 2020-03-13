@@ -1,0 +1,51 @@
+<script src="../dist/cos-js-sdk-v5.js"></script>
+<script src="../demo/common/cos-auth.min.js"></script>
+<script src="./jquery-2.2.3.min.js"></script>
+
+<input type="file" name="file" id="file-selector" />
+<a href="javascript:void(0);" id="get" >show</a>
+<img src="" id="show" />
+<script >
+$(function (){
+var config = {
+    Bucket: 'plbs-test-1257286922',
+    Region: 'ap-shanghai'
+};
+var path="path/";
+var filename="1.jpg";
+// 监听选文件
+	$("#file-selector").on("change",function(){
+		var file = this.files[0];
+		if (!file) return;
+		cos.putObject({
+		    Bucket: config.Bucket, /* 必须 */
+		    Region: config.Region,    /* 必须 */
+		    //Key:  file.name,              /* 必须 */
+		    Key: path+filename,
+		    Body: file,
+		}, function(err, data) {
+		    console.log(err || data);
+		});
+	});
+	$("#get").on("click",function(){
+		$("#show").attr("src","http://"+config.Bucket+".cos."+config.Region+".myqcloud.com/"+path+filename);
+	});
+});
+
+var cos = new COS({
+    getAuthorization: function (options, callback) {
+        // 异步获取临时密钥
+        $.get('../server/sts.php', {
+            bucket: options.Bucket,
+            region: options.Region,
+        }, function (data) {
+            callback({
+                 TmpSecretId: data.credentials.tmpSecretId, 
+                 TmpSecretKey: data.credentials.tmpSecretKey, 
+                 XCosSecurityToken: data.credentials.sessionToken, 
+                 ExpiredTime: data.expiredTime
+            });
+        });
+    }
+});
+</script>
