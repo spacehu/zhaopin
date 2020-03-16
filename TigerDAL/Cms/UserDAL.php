@@ -123,6 +123,8 @@ class UserDAL {
             $base = new BaseDAL();
             $sql = "select * from " . $base->table_name("user_wechat") . " where user_id=" . $id . "  limit 1 ;";
             $res['wechat']=$base->getFetchRow($sql);
+            $sql = "select * from " . $base->table_name("enterprise") . " where id=" . $res['enterprise_id'] . "  limit 1 ;";
+            $res['enterprise']=$base->getFetchRow($sql);
         }
         return $res;
     }
