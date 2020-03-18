@@ -92,6 +92,7 @@ class ApiArticle extends \action\RestfulApi {
     function updateSupport() {
         $id = isset($this->get['id']) ? $this->get['id'] : null;
         try {
+            $enterprise_id = AccountDAL::getEnterpriseUser($this->user_id)['enterprise_id'];
             $media_id = 0;
             if ($id != null) {
                 /** 更新操作 */
@@ -144,7 +145,7 @@ class ApiArticle extends \action\RestfulApi {
                     'tag' => isset($this->post['tag']) ? $this->post['tag'] : '',
                     'responsibilities' => isset($this->post['responsibilities']) ? $this->post['responsibilities'] : '',
                     'qualifications' => isset($this->post['qualifications']) ? $this->post['qualifications'] : '',
-                    'enterprise_id' => !empty($this->post['enterprise_id']) ? $this->post['enterprise_id'] : 0,
+                    'enterprise_id' => $enterprise_id,
                     'examination_id' => !empty($this->post['examination_id']) ? $this->post['examination_id'] : 0,
                 ];
                 self::$data['data'] = cmsArticleDAL::insert($data);
