@@ -53,8 +53,8 @@ class AuthDAL {
                 . "where `name`='" . $phone . "' "
                 . "limit 1";
         $user = $base->getFetchAll($sql);
-        if (!empty($user)) {
-            return "hadUser";
+        if (empty($user)) {
+            return "emptyUser";
         }
         return true;
     }
