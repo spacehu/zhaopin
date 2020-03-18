@@ -194,6 +194,11 @@ class ApiAuth extends \action\RestfulApi {
                     self::$data['success'] = false;
                     self::$data['data'] = $_apiAccessToken;
                     return self::$data;
+                }elseif($_apiAccessToken['errcode'] == 40163){
+                    /** 微信返回错误 */
+                    self::$data['success'] = false;
+                    self::$data['data'] = $_apiAccessToken;
+                    return self::$data;
                 }
                 $WeChatDAL=new BWeChatDAL();
                 //获取db中 微信用户表数据
