@@ -3,6 +3,7 @@ $class = \action\show::$data['class'];
 $data = \action\show::$data['data'];
 $list = \action\show::$data['enumList'];
 $enterprise_id = \action\show::$data['enterprise_id'];
+$region = \action\show::$data['region'];
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -79,28 +80,22 @@ $enterprise_id = \action\show::$data['enterprise_id'];
                             </select>
                         </div>
                         <div class="leftAlist" >
-                            <span>省</span>
+                            <span>地区</span>
                         </div>
                         <div class="leftAlist" >
-                            <div class="">
-                                <input class="text" name="province" type="text" value="<?php echo isset($data['province']) ? $data['province'] : ''; ?>" />
-                            </div>
-                        </div>
-                        <div class="leftAlist" >
-                            <span>市</span>
-                        </div>
-                        <div class="leftAlist" >
-                            <div class="">
-                                <input class="text" name="city" type="text" value="<?php echo isset($data['city']) ? $data['city'] : ''; ?>" />
-                            </div>
-                        </div>
-                        <div class="leftAlist" >
-                            <span>区</span>
-                        </div>
-                        <div class="leftAlist" >
-                            <div class="">
-                                <input class="text" name="district" type="text" value="<?php echo isset($data['district']) ? $data['district'] : ''; ?>" />
-                            </div>
+                            <select name="tempA" id="tempA">
+                                <option value="0">请选择</option>
+                            </select>
+                            <select name="tempB" id="tempB">
+                                <option value="0">请选择</option>
+                            </select>
+                            <select name="tempC" id="tempC">
+                                <option value="0">请选择</option>
+                            </select>
+                            
+                            <input type="hidden" name="province" id="province" value="<?php echo isset($data['province']) ? $data['province'] : 0; ?>" />
+                            <input type="hidden" name="city" id="city" value="<?php echo isset($data['city']) ? $data['city'] : 0; ?>" />
+                            <input type="hidden" name="district" id="district" value="<?php echo isset($data['district']) ? $data['district'] : 0; ?>" />
                         </div>
                         <div class="leftAlist" >
                             <span>岗位职责</span>
@@ -130,6 +125,59 @@ $enterprise_id = \action\show::$data['enterprise_id'];
         <script type="text/javascript">
             var ue = UE.getEditor('container2');
             var ue = UE.getEditor('container3');
+            
+            var _selectA =<?php echo isset($region['1'])?$region['1']:0; ?>;
+            var _selectB =<?php echo isset($region['2'])?$region['2']:0; ?>;
+            var _selectC =<?php echo isset($region['3'])?$region['3']:0; ?>;
+            $(function () {
+                var getRegionList = function (id) {
+                    var regionlist;
+                    $.ajax({
+                        async: false,
+                        url: "./v2/ApiEnum-getRegion.htm?id=" + id,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            regionlist = data.data.list;
+                        },
+                        complete: function () {
+                        }
+                    });
+                    return regionlist;
+                };
+                var setRegionInfo = function (id, name) {
+                    $("#"+name).val(id);
+                };
+                var mkOption = function (obj, id) {
+                    var html = '<option value="0">请选择</option>';
+                    $.each(obj, function (i, n) {
+                        var selected = '';
+                        if (id == n.id) {
+                            selected = 'selected';
+                        }
+                        html += '<option value="' + n.id + '" ' + selected + '>' + n.name + '</option>';
+                    });
+                    return html;
+                };
+
+                //loading
+                $("#tempA").html(mkOption(getRegionList(0), _selectA));
+                $("#tempB").html(mkOption(getRegionList(_selectA), _selectB));
+                $("#tempC").html(mkOption(getRegionList(_selectB), _selectC));
+                //click
+                $("#tempA").on('change', function () {
+                    $("#tempB").html(mkOption(getRegionList(this.value), 0));
+                    $("#tempC").html(mkOption(getRegionList(0), 0));
+                    setRegionInfo(this.value, 'province');
+                });
+                $("#tempB").on('change', function () {
+                    $("#tempC").html(mkOption(getRegionList(this.value), 0));
+                    setRegionInfo(this.value, 'city');
+                });
+                $("#tempC").on('change', function () {
+                    setRegionInfo(this.value, 'district');
+                });
+            });
         </script>
     </body>
 </html>

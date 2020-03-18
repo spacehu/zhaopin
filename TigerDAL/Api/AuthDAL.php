@@ -124,6 +124,8 @@ class AuthDAL {
             foreach ($data as $v) {
                 if (is_numeric($v)) {
                     $_data[] = " " . $v . " ";
+                } else if (empty($v)) {
+                    $_data[] = " null ";
                 } else {
                     $_data[] = " '" . $v . "' ";
                 }
@@ -143,6 +145,8 @@ class AuthDAL {
             foreach ($data as $k => $v) {
                 if (is_numeric($v)) {
                     $_data[] = " `" . $k . "`=" . $v . " ";
+                } else if (empty($v)) {
+                    $_data[] = " `" . $k . "`= null ";
                 } else {
                     $_data[] = " `" . $k . "`='" . $v . "' ";
                 }

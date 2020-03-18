@@ -9,6 +9,7 @@ use TigerDAL\Cms\EnumDAL;
 use TigerDAL\Cms\ArticleDAL;
 use TigerDAL\Cms\EnterpriseDAL;
 use TigerDAL\Cms\UserResumeArticleDAL;
+use TigerDAL\Api\EnumLeoDAL;
 use config\code;
 
 class show {
@@ -67,8 +68,10 @@ class show {
             if ($id != null) {
                 self::$data['data'] = ArticleDAL::getOne($id);
                 $enterprise_id=self::$data['data']['enterprise_id'];
+                self::$data['region'] = EnumLeoDAL::GetRegionFamily(self::$data['data']['city']);
             } else {
                 self::$data['data'] = null;
+                self::$data['region'] = [];
             }
             //Common::pr(self::$data['data']);die;
             self::$data['class'] = $this->class;

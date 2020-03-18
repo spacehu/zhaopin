@@ -12,6 +12,8 @@ use TigerDAL\Api\AccountDAL;
 use TigerDAL\Api\LessonDAL;
 use TigerDAL\Api\ResumeDAL;
 use TigerDAL\Api\LogDAL;
+use TigerDAL\Cms\UserDAL;
+use TigerDAL\Cms\EnterpriseDAL as cmsEnterpriseDAL;
 use config\code;
 
 class ApiAccount extends \action\RestfulApi {
@@ -210,6 +212,7 @@ class ApiAccount extends \action\RestfulApi {
                             'start_time' => isset($v['start_time']) ? $v['start_time'] : "",
                             'end_time' => isset($v['end_time']) ? $v['end_time'] : "",
                             'delete' => isset($v['delete']) ? $v['delete'] : 0,
+                            'education' => isset($v['education']) ? $v['education'] : "",
                         ];
                         ResumeDAL::saveOneSchool($_school);
                     }
@@ -273,7 +276,7 @@ class ApiAccount extends \action\RestfulApi {
      * phone
      * code
      */
-    function updateInfo() {
+    function updateUsersInfo() {
         $AuthDAL = new AuthDAL();
         try {
             //密码
@@ -356,6 +359,48 @@ class ApiAccount extends \action\RestfulApi {
             $os = move_uploaded_file($photo['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $path . '/' . $name);
             LogDAL::save(date("Y-m-d H:i:s") . "-------------------------------------" . json_encode($os) . "", "DEBUG");
             self::$data['data'] = $path . '/' . $name;
+        } catch (Exception $ex) {
+            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+        }
+        return self::$data;
+    }
+
+    /** 编辑 企业||用户 信息 */
+    function updateInfo() {
+        try {
+            //轮播列表
+            $res;
+            switch ($this->server_id) {
+                case \mod\init::$config['token']['server_id']['customer']:
+                    self::updateUserInfo();
+                    break;
+                case \mod\init::$config['token']['server_id']['business']:
+                    $res = EnterpriseDAL::getByUserId($this->user_id);
+                    if(!empty($this->post['email'])){
+                        $_userData["email"]=$this->post['email'];
+                        UserDAL::update($this->user_id,$_userData);
+                    }
+                    $_enterpriseData;
+                    if(!empty($this->post['enterprise_name'])){
+                        $_enterpriseData['name']=$this->post['enterprise_name'];
+                    }
+                    if(!empty($this->post['user_nane'])){
+                        $_enterpriseData['username']=$this->post['user_nane'];
+                    }
+                    if(!empty($_enterpriseData)){
+                        //var_dump($_enterpriseData);
+                        cmsEnterpriseDAL::update($res['id'],$_enterpriseData);
+                    }
+                    $res=true;
+                    break;
+                case \mod\init::$config['token']['server_id']['management']:
+                    break;
+                default:
+                    break;
+            }
+            self::$data['data']['userType'] = $this->server_id;
+            //print_r($res);die;
+            self::$data['data']['res'] = $res;
         } catch (Exception $ex) {
             TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
