@@ -41,6 +41,14 @@ $region = \action\show::$data['region'];
                     </div>
                     <div class="leftA c_17 ">
                         <div class="leftAlist" >
+                            <span>COMPANY NAME 公司名</span>
+                        </div>
+                        <div class="leftAlist" >
+                            <div class="">
+                                <input class="text" name="overview" type="text" value="<?php echo isset($data['overview']) ? $data['overview'] : ''; ?>" />
+                            </div>
+                        </div>
+                        <div class="leftAlist" >
                             <span>行业</span>
                         </div>
                         <div class="leftAlist" >
