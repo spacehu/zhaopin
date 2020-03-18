@@ -69,12 +69,14 @@ class ApiAuth extends \action\RestfulApi {
                     return self::$data;
                 }
             }else if(!empty($this->get['code'])){
-                LogDAL::saveLog("DEBUG", "INFO", json_encode($this->get['code']));
                 // 从微信的类包里面获取openid 然后查询表中该用户是否存在 
                 // 若存在 则查询出数据并折算出token 返回
                 // 否则 新建用户 并返回用户数据 并折算出token 返回
                 $wechat= new wechat();
+                LogDAL::saveLog("DEBUG", "INFO", json_encode($wechat->appid));
+                LogDAL::saveLog("DEBUG", "INFO", json_encode($wechat->appsecret));
                 $_apiAccessToken=$wechat->beforeDb();
+                LogDAL::saveLog("DEBUG", "INFO", json_encode($wechat->code));
                 if($_apiAccessToken['errcode'] == 40029){
                     /** 微信返回错误 */
                     self::$data['success'] = false;
