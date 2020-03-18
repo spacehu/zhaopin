@@ -73,6 +73,7 @@ class ApiAuth extends \action\RestfulApi {
                 // 若存在 则查询出数据并折算出token 返回
                 // 否则 新建用户 并返回用户数据 并折算出token 返回
                 $wechat= new wechat();
+                LogDAL::saveLog("DEBUG", "INFO", json_encode($wechat->code));
                 LogDAL::saveLog("DEBUG", "INFO", json_encode($wechat->appid));
                 LogDAL::saveLog("DEBUG", "INFO", json_encode($wechat->appsecret));
                 $_apiAccessToken=$wechat->beforeDb();
