@@ -10,6 +10,7 @@ use TigerDAL\Api\ResumeDAL;;
 use TigerDAL\Api\ExaminationDAL;
 use TigerDAL\Api\ExamDAL;
 use TigerDAL\Cms\ArticleDAL as cmsArticleDAL;
+use TigerDAL\Cms\UserDAL as cmsUserDAL;
 use config\code;
 
 class ApiArticle extends \action\RestfulApi {
@@ -92,7 +93,7 @@ class ApiArticle extends \action\RestfulApi {
     function updateSupport() {
         $id = isset($this->get['id']) ? $this->get['id'] : null;
         try {
-            $enterprise_id = AccountDAL::getEnterpriseUser($this->user_id)['enterprise_id'];
+            $enterprise_id = cmsUserDAL::getOne($this->user_id)['enterprise_id'];
             $media_id = 0;
             if ($id != null) {
                 /** 更新操作 */
