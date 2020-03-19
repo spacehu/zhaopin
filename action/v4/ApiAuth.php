@@ -68,30 +68,36 @@ class ApiAuth extends \action\RestfulApi {
                     self::$data['msg']="该用户为企业用户";
                     return self::$data;
                 }
-            }else if(!empty($this->get['code'])){
+            }else if(!empty($this->get['code'])||!empty($this->get['openid'])){
                 // 从微信的类包里面获取openid 然后查询表中该用户是否存在 
                 // 若存在 则查询出数据并折算出token 返回
                 // 否则 新建用户 并返回用户数据 并折算出token 返回
                 $wechat= new wechat();
-                LogDAL::saveLog("DEBUG", "INFO", json_encode($wechat->code));
-                LogDAL::saveLog("DEBUG", "INFO", json_encode($wechat->appid));
-                LogDAL::saveLog("DEBUG", "INFO", json_encode($wechat->appsecret));
-                $_apiAccessToken=$wechat->beforeDb();
-                LogDAL::saveLog("DEBUG", "INFO", json_encode($wechat->code));
-                if($_apiAccessToken['errcode'] == 40029){
-                    /** 微信返回错误 */
-                    self::$data['success'] = false;
-                    self::$data['data'] = $_apiAccessToken;
-                    return self::$data;
-                }elseif($_apiAccessToken['errcode'] == 40163){
-                    /** 微信返回错误 */
-                    self::$data['success'] = false;
-                    self::$data['data'] = $_apiAccessToken;
-                    return self::$data;
+                if(empty($this->get['openid'])){
+                    LogDAL::saveLog("DEBUG", "INFO", json_encode($wechat->code));
+                    LogDAL::saveLog("DEBUG", "INFO", json_encode($wechat->appid));
+                    LogDAL::saveLog("DEBUG", "INFO", json_encode($wechat->appsecret));
+                    $_apiAccessToken=$wechat->beforeDb();
+                    LogDAL::saveLog("DEBUG", "INFO", json_encode($wechat->code));
+                    if($_apiAccessToken['errcode'] == 40029){
+                        /** 微信返回错误 */
+                        self::$data['success'] = false;
+                        self::$data['data'] = $_apiAccessToken;
+                        return self::$data;
+                    }elseif($_apiAccessToken['errcode'] == 40163){
+                        /** 微信返回错误 */
+                        self::$data['success'] = false;
+                        self::$data['data'] = $_apiAccessToken;
+                        return self::$data;
+                    }
+                    $openid=$_apiAccessToken['openid'];
+                }else{
+                    $openid=$this->get['openid'];
                 }
+                //echo $openid;
                 $WeChatDAL=new WeChatDAL();
                 //获取db中 微信用户表数据
-                $_dbUserWeChatInfo = $WeChatDAL->getOpenId($_apiAccessToken['openid']);     //根据OPENID查找数据库中是否有这个用户，如果没有就写数据库。继承该类的其他类，用户都写入了数据库中。  
+                $_dbUserWeChatInfo = $WeChatDAL->getOpenId($openid);     //根据OPENID查找数据库中是否有这个用户，如果没有就写数据库。继承该类的其他类，用户都写入了数据库中。  
                 if (empty($_dbUserWeChatInfo)) {
                     // 根据openid 获取用户授权信息
                     $userInfo=$wechat->afterDb();
@@ -125,9 +131,10 @@ class ApiAuth extends \action\RestfulApi {
 
                 $_dbUserInfo = $UserInfoDAL->getUserInfo($_dbUserWeChatInfo['user_id'],$_dbUserWeChatInfo['nickname']);
                 if(empty($_dbUserWeChatInfo['user_id'])){
-                    $row['user_id']=$_dbUserInfo['id'];
+                    $_row['user_id']=$_dbUserInfo['id'];
                     $WeChatDAL->updateWeChatUserInfo($_dbUserWeChatInfo['id'],$_row);
                 }
+                //var_dump($_row);die;
                 $_dbUserInfo=$UserInfoDAL->getUser($_dbUserInfo['id']);
                 self::$data['success'] = true;
                 self::$data['data'] = $_dbUserInfo;
@@ -277,7 +284,7 @@ class ApiAuth extends \action\RestfulApi {
                 }
                 $_dbUser=$UserDAL->getByName($phone);
                 if(empty($_dbUserWeChatInfo['user_id'])){
-                    $row['user_id']=$_dbUser['id'];
+                    $_row['user_id']=$_dbUser['id'];
                     $WeChatDAL->updateWeChatUserInfo($_dbUserWeChatInfo['id'],$_row);
                 }
                 // 获取用户信息

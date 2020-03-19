@@ -80,6 +80,7 @@ class WeChatDAL {
             }
             $set = implode(',', $_data);
             $sql = "update " . $base->table_name('user_info_wechat') . " set " . $set . "  where id=" . $id . " ;";
+            //echo $sql;die;
             return $base->query($sql);
         } else {
             return true;
