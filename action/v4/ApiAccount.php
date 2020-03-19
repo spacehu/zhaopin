@@ -4,6 +4,7 @@ namespace action\v4;
 
 use mod\common as Common;
 use TigerDAL\Api\AuthDAL;
+use TigerDAL\CatchDAL;
 use TigerDAL\Api\TokenDAL;
 use TigerDAL\Api\EnterpriseDAL;
 use TigerDAL\Api\CourseDAL;
@@ -528,7 +529,55 @@ class ApiAccount extends \action\RestfulApi {
             //print_r($res);die;
             self::$data['data']['info'] = $res;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+        }
+        return self::$data;
+    }
+
+    /** 员工：获取已经投递过简历的职位列表 */
+    function getResumedSupports(){
+        try {
+            //轮播列表
+            if ($this->server_id != \mod\init::$config['token']['server_id']['customer']) {
+                self::$data['success'] = false;
+                self::$data['data']['code'] = "errorType";
+                self::$data['msg'] = code::$code["errorType"];
+                return self::$data;
+            }
+            $start_time=!empty($this->get['start_time'])?$this->get['start_time']:"";
+            $end_time=!empty($this->get['end_time'])?$this->get['end_time']:"";
+            $res = ResumeDAL::getResumeArticles($this->user_id,$start_time,$end_time);
+            $total = ResumeDAL::getResumeArticlesTotal($this->user_id,$start_time,$end_time);
+
+            self::$data['data']['userType'] = $this->server_id;
+            //print_r($res);die;
+            self::$data['data']['info'] = $res;
+            self::$data['data']['total'] = !empty($total)?(int)$total:0;
+        } catch (Exception $ex) {
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+        }
+        return self::$data;
+    }
+
+    /** 员工：获取已经投递过简历的职位数量 */
+    function getResumedSupportsTotal(){
+        try {
+            //轮播列表
+            if ($this->server_id != \mod\init::$config['token']['server_id']['customer']) {
+                self::$data['success'] = false;
+                self::$data['data']['code'] = "errorType";
+                self::$data['msg'] = code::$code["errorType"];
+                return self::$data;
+            }
+            $start_time=!empty($this->get['start_time'])?$this->get['start_time']:"";
+            $end_time=!empty($this->get['end_time'])?$this->get['end_time']:"";
+            $total = ResumeDAL::getResumeArticlesTotal($this->user_id,$start_time,$end_time);
+
+            self::$data['data']['userType'] = $this->server_id;
+            //print_r($res);die;
+            self::$data['data']['total'] = !empty($total)?(int)$total:0;
+        } catch (Exception $ex) {
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }

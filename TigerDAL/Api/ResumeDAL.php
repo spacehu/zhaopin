@@ -127,4 +127,44 @@ class ResumeDAL {
         return $base->getFetchRow($sql);
     }
 
+    /** 获取已经投递过的职位列表 */
+    public static function getResumeArticles($user_id,$start_time,$end_time){
+        $base = new BaseDAL();
+        $where = "";
+        if (!empty($start_time)) {
+            $where .= " and ura.add_time>='".$start_time."' ";
+        }
+        if (!empty($end_time)) {
+            $where .= " and ura.add_time<='".$end_time."' ";
+        }
+        $sql = "select a.* "
+                . " from " . $base->table_name("user_resume_article") . " as ura "
+                . " left join " . $base->table_name("article") . " as a on a.id=ura.article_id "
+                . " left join " . $base->table_name("enterprise") . " as e on e.id=a.enterprise_id "
+                . " where ura.user_id=" . $user_id . " "
+                .$where
+                . " and ura.`delete`=0 and a.`delete`=0 and (a.enterprise_id=0 or e.`delete`=0) ;";
+        return $base->getFetchAll($sql);
+    }
+
+    /** 获取已经投递过的职位数量 */
+    public static function getResumeArticlesTotal($user_id,$start_time,$end_time){
+        $base = new BaseDAL();
+        $where = "";
+        if (!empty($start_time)) {
+            $where .= " and ura.add_time>='".$start_time."' ";
+        }
+        if (!empty($end_time)) {
+            $where .= " and ura.add_time<='".$end_time."' ";
+        }
+        $sql = "select count(ura.article_id) as total "
+                . " from " . $base->table_name("user_resume_article") . " as ura "
+                . " left join " . $base->table_name("article") . " as a on a.id=ura.article_id "
+                . " left join " . $base->table_name("enterprise") . " as e on e.id=a.enterprise_id "
+                . " where ura.user_id=" . $user_id . " "
+                .$where
+                . " and ura.`delete`=0 and a.`delete`=0 and (a.enterprise_id=0 or e.`delete`=0) "
+                . " ;";
+        return $base->getFetchRow($sql)['total'];
+    }
 }

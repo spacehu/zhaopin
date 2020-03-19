@@ -136,6 +136,8 @@ return $config = [
             'GET /v4/ApiAuth-signWithWeChatAuthAuthorize.htm' => 'v4-ApiAuth-signWithWeChatAuthAuthorize', //登录
             'PUT /v4/ApiArticle-support.htm' => 'v4-ApiArticle-updateSupport', //编辑文章
             'DELETE /v4/ApiArticle-support.htm' => 'v4-ApiArticle-deleteSupport', //关闭文章
+            'GET /v4/ApiAccount-supports.htm' => 'v4-ApiAccount-getResumedSupports', //获取已经投递过简历的职位列表
+            'GET /v4/ApiAccount-supportsTotal.htm' => 'v4-ApiAccount-getResumedSupportsTotal', //获取已经投递过简历的职位列表
 
 
         ]
