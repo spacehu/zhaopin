@@ -9,6 +9,7 @@ use TigerDAL\Api\AccountDAL;
 use TigerDAL\Api\ResumeDAL;;
 use TigerDAL\Api\ExaminationDAL;
 use TigerDAL\Api\ExamDAL;
+use TigerDAL\Api\EnumLeoDAL;
 use TigerDAL\Cms\ArticleDAL as cmsArticleDAL;
 use TigerDAL\Cms\UserDAL as cmsUserDAL;
 use config\code;
@@ -60,11 +61,18 @@ class ApiArticle extends \action\RestfulApi {
 
             if (!empty($res)) {
                 foreach ($res as $k => $v) {
-                    $_row = ResumeDAL::getResumeArticle($this->user_id, $v['id']);
-                    $res[$k]['resume_article'] = (!empty($_row)) ? ($_row['delete'] == 0) ? 1 : 0 : 0;
+                    if($this->server_id==\mod\init::$config['token']['server_id']['customer']){
+                        $_row = ResumeDAL::getResumeArticle($this->user_id, $v['id']);
+                        $res[$k]['resume_article'] = (!empty($_row)) ? ($_row['delete'] == 0) ? 1 : 0 : 0;
+                    }
+                    $_row = EnumLeoDAL::GetRegionById($v['province']);
+                    $res[$k]['province']=!empty($_row)?$_row['name']:"";
+                    $_row = EnumLeoDAL::GetRegionById($v['city']);
+                    $res[$k]['city']=!empty($_row)?$_row['name']:"";
+                    $_row = EnumLeoDAL::GetRegionById($v['district']);
+                    $res[$k]['district']=!empty($_row)?$_row['name']:"";
                 }
             }
-            //print_r($res);die;
             self::$data['data']['list'] = $res;
             self::$data['data']['total'] = $total;
         } catch (Exception $ex) {
@@ -78,6 +86,12 @@ class ApiArticle extends \action\RestfulApi {
         try {
             //轮播列表
             $res = ArticleDAL::getOne($this->get['id']);
+            $_row = EnumLeoDAL::GetRegionById($res['province']);
+            $res['province']=!empty($_row)?$_row['name']:"";
+            $_row = EnumLeoDAL::GetRegionById($res['city']);
+            $res['city']=!empty($_row)?$_row['name']:"";
+            $_row = EnumLeoDAL::GetRegionById($res['district']);
+            $res['district']=!empty($_row)?$_row['name']:"";
             self::$data['data'] = $res;
             if($this->server_id==\mod\init::$config['token']['server_id']['customer']){
                 $resRA = ResumeDAL::getResumeArticle($this->user_id, $this->get['id']);

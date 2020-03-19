@@ -63,4 +63,11 @@ class EnumLeoDAL {
         return $res;
     }
 
+    /** 根据id获取信息 */
+    public static function GetRegionById($id){
+        $base = new BaseDAL();
+        $sql = "select * from " . $base->table_name("region_leo") . " where id='" . $id . "';";
+        //echo $sql;die;
+        return $base->getFetchRow($sql);
+    }
 }
