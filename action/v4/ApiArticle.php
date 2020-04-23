@@ -36,6 +36,7 @@ class ApiArticle extends \action\RestfulApi {
             $this->user_id = $_token['data']['user_id'];
             $this->server_id = $_token['data']['server_id'];
         }
+        //common::pr($_token);
         if (!empty($path)) {
             $_path = explode("-", $path);
             $mod= $_path['2'];
@@ -105,6 +106,12 @@ class ApiArticle extends \action\RestfulApi {
 
     /** 编辑职位信息 */
     function updateSupport() {
+        if($this->server_id!=\mod\init::$config['token']['server_id']['business']){
+            self::$data['success'] = false;
+            self::$data['data']['code'] = "errorToken";
+            self::$data['msg'] = "user info is error.";
+            return self::$data;
+        }
         $id = isset($this->get['id']) ? $this->get['id'] : null;
         try {
             $enterprise_id = cmsUserDAL::getOne($this->user_id)['enterprise_id'];
@@ -131,6 +138,7 @@ class ApiArticle extends \action\RestfulApi {
                     'responsibilities' => isset($this->post['responsibilities']) ? $this->post['responsibilities'] : '',
                     'qualifications' => isset($this->post['qualifications']) ? $this->post['qualifications'] : '',
                 ];
+                //common::pr($data);
                 self::$data['data'] = cmsArticleDAL::update($id, $data);
             } else {
                 /** 新增操作 */
