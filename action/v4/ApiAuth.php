@@ -268,7 +268,7 @@ class ApiAuth extends \action\RestfulApi {
                 $WeChatDAL=new BWeChatDAL();
                 //获取db中 微信用户表数据
                 $_dbUserWeChatInfo = $WeChatDAL->getOpenId($openid); 
-                if(!empty($_dbUserWeChatInfo)){
+                if(empty($_dbUserWeChatInfo)){
                     self::$data['success'] = false;
                     self::$data['data']['code'] = "error_openid";
                     self::$data['data']['userError'] = $_dbUserWeChatInfo;
