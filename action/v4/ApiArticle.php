@@ -137,6 +137,7 @@ class ApiArticle extends \action\RestfulApi {
                     'tag' => isset($this->post['tag']) ? $this->post['tag'] : '',
                     'responsibilities' => isset($this->post['responsibilities']) ? $this->post['responsibilities'] : '',
                     'qualifications' => isset($this->post['qualifications']) ? $this->post['qualifications'] : '',
+                    'delete' => isset($this->post['delete']) ? $this->post['delete'] : 0,
                 ];
                 //common::pr($data);
                 self::$data['data'] = cmsArticleDAL::update($id, $data);

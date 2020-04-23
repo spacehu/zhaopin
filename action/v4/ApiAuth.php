@@ -246,7 +246,7 @@ class ApiAuth extends \action\RestfulApi {
                 // 获取 微信表 & 用户表 数据
                 // 这里有个问题 如果没有绑定过管理员 该微信号中的user_id为空 则直接返回openid
                 if(empty($_dbUserWeChatInfo['user_id'])){
-                    self::$data['success'] = true;
+                    self::$data['success'] = false;
                     self::$data['data']['code'] = "empty_phone";
                     self::$data['data']['userError'] = $_dbUserWeChatInfo;
                     self::$data['data']['openid'] = $_dbUserWeChatInfo['openid'];
