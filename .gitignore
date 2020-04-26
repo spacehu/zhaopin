@@ -6,4 +6,4 @@ config/parem.env.prod.php
 config/parem.mysql.local.php
 config/parem.mysql.dev.php
 config/parem.mysql.prod.php
-
+.idea/
