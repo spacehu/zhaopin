@@ -13,7 +13,10 @@ class SystemDAL {
         return $base->getFetchAll($sql);
     }
 
-    /** 更新系统信息 */
+    /** 更新系统信息
+     * @param $data
+     * @return bool
+     */
     public static function updateSystem($data) {
         $base = new BaseDAL();
         if (!empty($data)) {
@@ -26,7 +29,10 @@ class SystemDAL {
         return true;
     }
 
-    /** 确认系统信息 若一致则不变 不一致则修改 */
+    /** 确认系统信息 若一致则不变 不一致则修改
+     * @param $data
+     * @return bool
+     */
     public static function checkSystem($data) {
         $base = new BaseDAL();
         if (!empty($data)) {
@@ -43,7 +49,10 @@ class SystemDAL {
         return true;
     }
 
-    /** 获取某条系统配置 */
+    /** 获取某条系统配置
+     * @param $key
+     * @return array|bool|null
+     */
     public static function getConfig($key) {
         $base = new BaseDAL();
         if (empty($key)) {

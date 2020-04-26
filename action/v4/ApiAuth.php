@@ -2,6 +2,8 @@
 
 namespace action\v4;
 
+use action\RestfulApi;
+use http\Exception;
 use mod\common as Common;
 use TigerDAL\Api\AuthDAL;
 use TigerDAL\Api\TokenDAL;
@@ -9,11 +11,12 @@ use TigerDAL\Api\WeChatDAL;
 use TigerDAL\Api\BWeChatDAL;
 use TigerDAL\Api\LogDAL;
 use config\code;
+use TigerDAL\CatchDAL;
 use TigerDAL\Cms\UserInfoDAL;
 use TigerDAL\Cms\UserDAL;
 use mod\wechat;
 
-class ApiAuth extends \action\RestfulApi {
+class ApiAuth extends RestfulApi {
 
     public $user_id;
     public $server_id;
@@ -145,7 +148,7 @@ class ApiAuth extends \action\RestfulApi {
             }
             
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         LogDAL::saveLog("DEBUG", "INFO", json_encode(self::$data));
         return self::$data;
@@ -172,7 +175,7 @@ class ApiAuth extends \action\RestfulApi {
             self::$data['data'] = $check;
             return self::$data;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
     }
     
@@ -297,7 +300,7 @@ class ApiAuth extends \action\RestfulApi {
             }
             
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         LogDAL::saveLog("DEBUG", "INFO", json_encode(self::$data));
         return self::$data;
@@ -322,7 +325,7 @@ class ApiAuth extends \action\RestfulApi {
             self::$data['data'] = $check;
             return self::$data;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
     }
 
@@ -405,7 +408,7 @@ class ApiAuth extends \action\RestfulApi {
                 self::$data['msg'] = code::$code['errorSql'];
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
@@ -438,7 +441,7 @@ class ApiAuth extends \action\RestfulApi {
                 self::$data['data']['deathline'] = TokenDAL::getTimeOut();
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
@@ -456,10 +459,10 @@ class ApiAuth extends \action\RestfulApi {
                 $_data = [
                     'user_id' => '',
                 ];
-                $wechat->addWeChatUserInfo($result['id'], $_data);
+                $wechat->updateWeChatUserInfo($result['id'], $_data);
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
@@ -504,7 +507,7 @@ class ApiAuth extends \action\RestfulApi {
                 self::$data['msg'] = code::$code['errorSql'];
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }

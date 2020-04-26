@@ -2,6 +2,8 @@
 
 namespace TigerDAL;
 
+use http\Exception;
+use mod\init;
 use TigerDAL\Api\LogDAL;
 use TigerDAL\cli\LogDAL as cLogDAL;
 
@@ -23,10 +25,11 @@ class BaseDAL {
 
     //默认方法
     function __construct($_LOG = "DEBUG") {
-        $this->tab_name = \mod\init::$config['mysql']['table_pre'];
-        $this->conn = \mod\init::$config['mysql']['conn'];
+        $this->tab_name = init::$config['mysql']['table_pre'];
+        $this->conn = init::$config['mysql']['conn'];
         //var_dump($this->conn);
         $this->log = $_LOG;
+        init::$config['mysql']['conn'] = $this->mysqlStart();
     }
 
     function __destruct() {
@@ -37,7 +40,24 @@ class BaseDAL {
         }
     }
 
-    /** 获取列表 */
+    /** 创建mysql链接 */
+    private function mysqlStart() {
+        try {
+            $conn = mysqli_connect(
+                init::$config['mysql']['host'], init::$config['mysql']['user'], init::$config['mysql']['password'], init::$config['mysql']['dbName'], init::$config['mysql']['port']
+            );
+            mysqli_query($conn, "set names utf8");
+            return $conn;
+        } catch (Exception $ex) {
+            var_dump($ex);
+            exit;
+        }
+    }
+
+    /** 获取列表
+     * @param $sql
+     * @return array|bool
+     */
     public function getFetchAll($sql) {
         $result = $this->query($sql);
         if (!empty($result)) {
@@ -52,7 +72,10 @@ class BaseDAL {
         }
     }
 
-    /** 获取单个 */
+    /** 获取单个
+     * @param $sql
+     * @return array|bool|null
+     */
     public function getFetchRow($sql) {
         $result = $this->query($sql);
         if (!empty($result)) {
@@ -67,14 +90,20 @@ class BaseDAL {
         }
     }
 
-    /** 执行sql */
+    /** 执行sql
+     * @param $sql
+     * @return bool|\mysqli_result
+     */
     public function query($sql) {
         $this->sql .= $sql;
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }
 
-    /** 设置表名 */
+    /** 设置表名
+     * @param $name
+     * @return string
+     */
     public function table_name($name) {
         $ls = $this->tab_name . $name;
         return $ls;
@@ -85,9 +114,14 @@ class BaseDAL {
         return mysqli_insert_id($this->conn);
     }
 
-    /** 新增用户信息 */
+    /** 新增用户信息
+     * @param $data
+     * @param $_db
+     * @return bool|\mysqli_result
+     */
     public function insert($data, $_db) {
         if (is_array($data)) {
+            $_data=[];
             foreach ($data as $v) {
                 if (is_numeric($v)) {
                     $_data[] = " " . $v . " ";
@@ -98,7 +132,7 @@ class BaseDAL {
                 }
             }
             $set = implode(',', $_data);
-            $sql = "insert into " . $this->table_name($_db) . " values (null," . $set . ");";
+            $sql = "insert into " . $this->table_name($_db) . " values(null," . $set . ");";
             //\mod\common::pr($sql);die;
             return $this->query($sql);
         } else {
@@ -106,9 +140,15 @@ class BaseDAL {
         }
     }
 
-    /** 更新用户信息 */
+    /** 更新用户信息
+     * @param $id
+     * @param $data
+     * @param $_db
+     * @return bool|\mysqli_result
+     */
     public function update($id, $data, $_db) {
         if (is_array($data)) {
+            $_data=[];
             foreach ($data as $k => $v) {
                 if (is_numeric($v)) {
                     $_data[] = " `" . $k . "`=" . $v . " ";

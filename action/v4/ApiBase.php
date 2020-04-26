@@ -2,15 +2,17 @@
 
 namespace action\v4;
 
-use mod\common as Common;
+use action\RestfulApi;
+use http\Exception;
 use TigerDAL\Api\ImageDAL;
+use TigerDAL\CatchDAL;
 use TigerDAL\Cms\CategoryDAL;
 use TigerDAL\Cms\SystemDAL;
 use TigerDAL\Api\ArticleDAL;
 use TigerDAL\Cms\EnumDAL;
 use config\code;
 
-class ApiBase extends \action\RestfulApi {
+class ApiBase extends RestfulApi {
 
     public $user_id;
     public $server_id;
@@ -35,7 +37,9 @@ class ApiBase extends \action\RestfulApi {
             //轮播列表
 
             $res = array_values(CategoryDAL::getCategorys(1, 96, '', 1));
+            $_res=[];
             if (!empty($res)) {
+                $_obj=[];
                 foreach ($res as $k => $v) {
                     if (!empty($v['media_id'])) {
                         $_obj[] = $v['media_id'];
@@ -61,7 +65,7 @@ class ApiBase extends \action\RestfulApi {
 
             self::$data['data']['list'] = $_res;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
@@ -74,7 +78,7 @@ class ApiBase extends \action\RestfulApi {
             $res = ArticleDAL::getCitys();
             self::$data['data']['list'] = $res;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
@@ -85,7 +89,7 @@ class ApiBase extends \action\RestfulApi {
             $res = ArticleDAL::getTypes();
             self::$data['data']['list'] = $res;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
@@ -101,7 +105,7 @@ class ApiBase extends \action\RestfulApi {
             }
             self::$data['data']['info'] = $obj;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
@@ -117,7 +121,7 @@ class ApiBase extends \action\RestfulApi {
             }
             self::$data['data']['info'] = $obj;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
@@ -129,7 +133,7 @@ class ApiBase extends \action\RestfulApi {
             $res = EnumDAL::getAllDecode(['薪资','工作经验','行业']);
             self::$data['data']['list'] = $res;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
