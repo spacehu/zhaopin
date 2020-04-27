@@ -2,8 +2,10 @@
 
 namespace action;
 
+use http\Exception;
 use mod\common as Common;
-use TigerDAL;
+use mod\init;
+use TigerDAL\CatchDAL;
 use TigerDAL\Cms\SystemDAL;
 use config\code;
 
@@ -21,9 +23,9 @@ class system {
         try {
             self::$data['data'] = SystemDAL::getAll();
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::SYSTEM_INDEX], code::SYSTEM_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::SYSTEM_INDEX], code::SYSTEM_INDEX, json_encode($ex));
         }
-        \mod\init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
+        init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
     }
 
     function updateSystem() {
@@ -36,7 +38,7 @@ class system {
                 Common::js_alert('修改失败，请联系系统管理员');
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::SYSTEM_UPDATE], code::SYSTEM_UPDATE, json_encode($ex));
+            CatchDAL::markError(code::$code[code::SYSTEM_UPDATE], code::SYSTEM_UPDATE, json_encode($ex));
         }
     }
 }

@@ -11,11 +11,21 @@ namespace TigerDAL;
 
 class CatchDAL {
 
-    /** 记录异常 */
+    /** 记录异常
+     * @param $name
+     * @param $code
+     * @param $detail
+     * @return bool|\mysqli_result
+     */
     public static function markError($name, $code, $detail) {
         $base = new BaseDAL();
-        $sql = "insert into " . $base->table_name('error_log') . " values(null,'" . $name . "','" . $code . "','" . $detail . "',now()) ;";
-        return $base->query($sql);
+        $_data=[
+            'name'=>$name,
+            'code'=>$code,
+            'detail'=>$detail,
+            'add_time'=>'NOW()',
+        ];
+        return $base->insert($_data,"error_log");
     }
 
 }

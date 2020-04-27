@@ -6,7 +6,7 @@
         <title><?php echo mod\init::$config['shop_name']; ?>-CMS</title>
     </head>
 
-    <body style="background:url(img/login_background.jpg) repeat center 0;">
+    <body style="background:url(/img/login_background.jpg) repeat center 0;">
         <div class="wrapperlogin">
             <form action="<?php echo \mod\common::url_rewrite("index.php?a=login&m=loginPost"); ?>" method="post" >
                 <div class="login">

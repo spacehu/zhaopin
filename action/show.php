@@ -2,9 +2,10 @@
 
 namespace action;
 
+use http\Exception;
 use mod\common as Common;
-use TigerDAL;
-use TigerDAL\Cms\ImageDAL;
+use mod\init;
+use TigerDAL\CatchDAL;
 use TigerDAL\Cms\EnumDAL;
 use TigerDAL\Cms\ArticleDAL;
 use TigerDAL\Cms\EnterpriseDAL;
@@ -33,7 +34,7 @@ class show {
                 }
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::CATEGORY_INDEX], code::CATEGORY_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::CATEGORY_INDEX], code::CATEGORY_INDEX, json_encode($ex));
         }
     }
 
@@ -42,7 +43,7 @@ class show {
         Common::writeSession($_SERVER['REQUEST_URI'], $this->class);
         try {
             $currentPage = isset($_GET['currentPage']) ? $_GET['currentPage'] : 1;
-            $pagesize = isset($_GET['pagesize']) ? $_GET['pagesize'] : \mod\init::$config['page_width'];
+            $pagesize = isset($_GET['pagesize']) ? $_GET['pagesize'] : init::$config['page_width'];
             $keywords = isset($_GET['keywords']) ? $_GET['keywords'] : "";
 
             self::$data['currentPage'] = $currentPage;
@@ -54,20 +55,18 @@ class show {
             self::$data['data'] = ArticleDAL::getAll($currentPage, $pagesize, $keywords, '', $this->enterprise_id);
             self::$data['total'] = ArticleDAL::getTotal($keywords,'', $this->enterprise_id);
 
-            \mod\init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
+            init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::SHOW_INDEX], code::SHOW_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::SHOW_INDEX], code::SHOW_INDEX, json_encode($ex));
         }
     }
 
     function getShow() {
         Common::isset_cookie();
         $id = isset($_GET['id']) ? $_GET['id'] : null;
-        $enterprise_id=$this->enterprise_id;
         try {
             if ($id != null) {
                 self::$data['data'] = ArticleDAL::getOne($id);
-                $enterprise_id=self::$data['data']['enterprise_id'];
                 self::$data['region'] = EnumLeoDAL::GetRegionFamily(self::$data['data']['city']);
             } else {
                 self::$data['data'] = null;
@@ -79,9 +78,9 @@ class show {
             self::$data['enumList'] = EnumDAL::getAllDecode(['薪资','工作经验','行业']);
             //Common::pr(self::$data['enumList']);die;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::SHOW_INDEX], code::SHOW_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::SHOW_INDEX], code::SHOW_INDEX, json_encode($ex));
         }
-        \mod\init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
+        init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
     }
 
     function updateShow() {
@@ -156,7 +155,7 @@ class show {
                 Common::js_alert('修改失败，请联系系统管理员');
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::SHOW_UPDATE], code::SHOW_UPDATE, json_encode($ex));
+            CatchDAL::markError(code::$code[code::SHOW_UPDATE], code::SHOW_UPDATE, json_encode($ex));
         }
     }
 
@@ -169,7 +168,7 @@ class show {
             }
             Common::js_redir(Common::getSession($this->class));
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::SHOW_DELETE], code::SHOW_DELETE, json_encode($ex));
+            CatchDAL::markError(code::$code[code::SHOW_DELETE], code::SHOW_DELETE, json_encode($ex));
         }
     }
 
@@ -178,7 +177,7 @@ class show {
         $id = isset($_GET['id']) ? $_GET['id'] : null;
         try {
             $currentPage = isset($_GET['currentPage']) ? $_GET['currentPage'] : 1;
-            $pagesize = isset($_GET['pagesize']) ? $_GET['pagesize'] : \mod\init::$config['page_width'];
+            $pagesize = isset($_GET['pagesize']) ? $_GET['pagesize'] : init::$config['page_width'];
 
             self::$data['currentPage'] = $currentPage;
             self::$data['pagesize'] = $pagesize;
@@ -189,9 +188,9 @@ class show {
             self::$data['data'] = UserResumeArticleDAL::getAll($currentPage, $pagesize, $id);
             self::$data['total'] = UserResumeArticleDAL::getTotal($id);
 
-            \mod\init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
+            init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::SHOW_INDEX], code::SHOW_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::SHOW_INDEX], code::SHOW_INDEX, json_encode($ex));
         }
     }
 
@@ -202,9 +201,9 @@ class show {
             //Common::pr(self::$data['data']);die;
             self::$data['class'] = $this->class;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::SHOW_INDEX], code::SHOW_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::SHOW_INDEX], code::SHOW_INDEX, json_encode($ex));
         }
-        \mod\init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
+        init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
     }
 
     function deleteUserResumeArticle() {
@@ -214,7 +213,7 @@ class show {
             //Common::pr(self::$data['data']);die;
             Common::js_redir(Common::getSession($this->class));
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::SHOW_INDEX], code::SHOW_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::SHOW_INDEX], code::SHOW_INDEX, json_encode($ex));
         }
     }
 

@@ -2,19 +2,19 @@
 
 namespace action\v4;
 
-use mod\common as Common;
+use action\RestfulApi;
+use http\Exception;
+use mod\init;
 use TigerDAL\Api\TokenDAL;
 use TigerDAL\Api\ArticleDAL;
-use TigerDAL\Api\AccountDAL;
 use TigerDAL\Api\ResumeDAL;;
-use TigerDAL\Api\ExaminationDAL;
-use TigerDAL\Api\ExamDAL;
 use TigerDAL\Api\EnumLeoDAL;
+use TigerDAL\CatchDAL;
 use TigerDAL\Cms\ArticleDAL as cmsArticleDAL;
 use TigerDAL\Cms\UserDAL as cmsUserDAL;
 use config\code;
 
-class ApiArticle extends \action\RestfulApi {
+class ApiArticle extends RestfulApi {
 
     public $user_id;
     public $server_id;
@@ -48,7 +48,7 @@ class ApiArticle extends \action\RestfulApi {
     /** 职位 列表 */
     function supports() {
         $currentPage = isset($this->get['currentPage']) ? $this->get['currentPage'] : 1;
-        $pagesize = isset($this->get['pagesize']) ? $this->get['pagesize'] : \mod\init::$config['page_width'];
+        $pagesize = isset($this->get['pagesize']) ? $this->get['pagesize'] : init::$config['page_width'];
         $keywords = isset($this->get['keywords']) ? $this->get['keywords'] : "";
         $city = isset($this->get['city']) ? $this->get['city'] : '';
         $type = isset($this->get['type']) ? $this->get['type'] : '';
@@ -62,7 +62,7 @@ class ApiArticle extends \action\RestfulApi {
 
             if (!empty($res)) {
                 foreach ($res as $k => $v) {
-                    if($this->server_id==\mod\init::$config['token']['server_id']['customer']){
+                    if($this->server_id== init::$config['token']['server_id']['customer']){
                         $_row = ResumeDAL::getResumeArticle($this->user_id, $v['id']);
                         $res[$k]['resume_article'] = (!empty($_row)) ? ($_row['delete'] == 0) ? 1 : 0 : 0;
                     }
@@ -77,7 +77,7 @@ class ApiArticle extends \action\RestfulApi {
             self::$data['data']['list'] = $res;
             self::$data['data']['total'] = $total;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
@@ -94,19 +94,19 @@ class ApiArticle extends \action\RestfulApi {
             $_row = EnumLeoDAL::GetRegionById($res['district']);
             $res['district']=!empty($_row)?$_row['name']:"";
             self::$data['data'] = $res;
-            if($this->server_id==\mod\init::$config['token']['server_id']['customer']){
+            if($this->server_id== init::$config['token']['server_id']['customer']){
                 $resRA = ResumeDAL::getResumeArticle($this->user_id, $this->get['id']);
                 self::$data['data']['resume_article'] = (!empty($resRA)) ? ($resRA['delete'] == 0) ? 1 : 0 : 0;
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
 
     /** 编辑职位信息 */
     function updateSupport() {
-        if($this->server_id!=\mod\init::$config['token']['server_id']['business']){
+        if($this->server_id!= init::$config['token']['server_id']['business']){
             self::$data['success'] = false;
             self::$data['data']['code'] = "errorToken";
             self::$data['msg'] = "user info is error.";
@@ -175,7 +175,7 @@ class ApiArticle extends \action\RestfulApi {
                 self::$data['data'] = cmsArticleDAL::insert($data);
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
@@ -188,7 +188,7 @@ class ApiArticle extends \action\RestfulApi {
                 self::$data['data'] = cmsArticleDAL::delete($id);
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }

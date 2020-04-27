@@ -2,9 +2,11 @@
 
 namespace action;
 
+use http\Exception;
 use mod\common as Common;
 use config\code;
 use TigerDAL\Api\LogDAL;
+use TigerDAL\CatchDAL;
 
 class api {
 
@@ -29,7 +31,7 @@ class api {
             Common::js_redir($_url);
             exit;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
     }
 

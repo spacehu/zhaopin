@@ -2,8 +2,10 @@
 
 namespace action;
 
+use http\Exception;
 use mod\common as Common;
-use TigerDAL;
+use mod\init;
+use TigerDAL\CatchDAL;
 use TigerDAL\Cms\UserWechatDAL;
 use TigerDAL\Cms\UserInfoDAL;
 use config\code;
@@ -23,7 +25,7 @@ class userWechat {
         Common::writeSession($_SERVER['REQUEST_URI'], $this->class);
         //Common::pr(Common::getSession($this->class));die;
         $currentPage = isset($_GET['currentPage']) ? $_GET['currentPage'] : 1;
-        $pagesize = isset($_GET['pagesize']) ? $_GET['pagesize'] : \mod\init::$config['page_width'];
+        $pagesize = isset($_GET['pagesize']) ? $_GET['pagesize'] : init::$config['page_width'];
         $keywords = isset($_GET['keywords']) ? $_GET['keywords'] : "";
         try {
             self::$data['data'] = UserWechatDAL::getAll($currentPage, $pagesize, $keywords);
@@ -34,9 +36,9 @@ class userWechat {
             self::$data['keywords'] = $keywords;
             self::$data['class'] = $this->class;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
         }
-        \mod\init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
+        init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
     }
 
     function getUserWechat() {
@@ -53,9 +55,9 @@ class userWechat {
                 self::$data['data'] = null;
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
         }
-        \mod\init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
+        init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
     }
 
 }

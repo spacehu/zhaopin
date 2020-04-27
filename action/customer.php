@@ -2,8 +2,10 @@
 
 namespace action;
 
+use http\Exception;
 use mod\common as Common;
-use TigerDAL;
+use mod\init;
+use TigerDAL\CatchDAL;
 use TigerDAL\Cms\UserInfoDAL;
 use TigerDAL\Cms\EnterpriseDAL;
 use TigerDAL\Cms\CourseDAL;
@@ -25,7 +27,7 @@ class customer {
                 $this->enterprise_id = '';
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::CATEGORY_INDEX], code::CATEGORY_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::CATEGORY_INDEX], code::CATEGORY_INDEX, json_encode($ex));
         }
     }
 
@@ -36,7 +38,7 @@ class customer {
         Common::writeSession($_SERVER['REQUEST_URI'], $this->class);
         //Common::pr(Common::getSession($this->class));die;
         $currentPage = isset($_GET['currentPage']) ? $_GET['currentPage'] : 1;
-        $pagesize = isset($_GET['pagesize']) ? $_GET['pagesize'] : \mod\init::$config['page_width'];
+        $pagesize = isset($_GET['pagesize']) ? $_GET['pagesize'] : init::$config['page_width'];
         $keywords = isset($_GET['keywords']) ? $_GET['keywords'] : "";
         try {
             self::$data['data'] = UserInfoDAL::getAll($currentPage, $pagesize, $keywords, $this->enterprise_id);
@@ -47,9 +49,9 @@ class customer {
             self::$data['keywords'] = $keywords;
             self::$data['class'] = $this->class;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
         }
-        \mod\init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
+        init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
     }
 
     function getCustomer() {
@@ -73,9 +75,9 @@ class customer {
             }
             self::$data['class'] = $this->class;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
         }
-        \mod\init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
+        init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
     }
 
     function updateCustomer() {
@@ -95,7 +97,7 @@ class customer {
                 Common::js_alert('修改失败，请联系系统管理员');
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::CATEGORY_UPDATE], code::CATEGORY_UPDATE, json_encode($ex));
+            CatchDAL::markError(code::$code[code::CATEGORY_UPDATE], code::CATEGORY_UPDATE, json_encode($ex));
         }
     }
 
@@ -109,7 +111,7 @@ class customer {
             UserInfoDAL::saveEnterpriseUser($id, $this->enterprise_id, $_data);
             Common::js_redir(Common::getSession($this->class));
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::CATEGORY_UPDATE], code::CATEGORY_UPDATE, json_encode($ex));
+            CatchDAL::markError(code::$code[code::CATEGORY_UPDATE], code::CATEGORY_UPDATE, json_encode($ex));
         }
     }
 
@@ -124,7 +126,7 @@ class customer {
             }
             Common::js_redir(Common::getSession($this->class));
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::CATEGORY_UPDATE], code::CATEGORY_UPDATE, json_encode($ex));
+            CatchDAL::markError(code::$code[code::CATEGORY_UPDATE], code::CATEGORY_UPDATE, json_encode($ex));
         }
     }
 

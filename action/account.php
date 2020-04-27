@@ -2,8 +2,10 @@
 
 namespace action;
 
+use http\Exception;
 use mod\common as Common;
-use TigerDAL;
+use mod\init;
+use TigerDAL\CatchDAL;
 use TigerDAL\Cms\UserDAL;
 use config\code;
 
@@ -31,9 +33,9 @@ class account {
                 self::$data['data'] = null;
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
         }
-        \mod\init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
+        init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
     }
 
     function updateAccount() {
@@ -42,7 +44,7 @@ class account {
         try {
             if ($_POST['password'] !== $_POST['password_cfn']) {
                 Common::js_alert(code::$code['errorPasswordDifferent']);
-                TigerDAL\CatchDAL::markError(code::$code[code::$code['errorPasswordDifferent']], code::$code['errorPasswordDifferent'], json_encode($_POST));
+                CatchDAL::markError(code::$code[code::$code['errorPasswordDifferent']], code::$code['errorPasswordDifferent'], json_encode($_POST));
                 Common::js_redir(Common::getSession($this->class));
             }
             $data = [
@@ -58,7 +60,7 @@ class account {
                 Common::js_alert('修改失败，请联系系统管理员');
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::USER_UPDATE], code::USER_UPDATE, json_encode($ex));
+            CatchDAL::markError(code::$code[code::USER_UPDATE], code::USER_UPDATE, json_encode($ex));
         }
     }
 

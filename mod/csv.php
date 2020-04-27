@@ -2,8 +2,6 @@
 
 namespace mod;
 
-use mod\init as Init;
-use TigerDAL\BaseDAL;
 
 class csv {
 

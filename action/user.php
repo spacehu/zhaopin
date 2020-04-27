@@ -2,8 +2,10 @@
 
 namespace action;
 
+use http\Exception;
 use mod\common as Common;
-use TigerDAL;
+use mod\init;
+use TigerDAL\CatchDAL;
 use TigerDAL\Cms\UserDAL;
 use TigerDAL\Cms\RoleDAL;
 use TigerDAL\Cms\EnterpriseDAL;
@@ -24,7 +26,7 @@ class user {
         Common::writeSession($_SERVER['REQUEST_URI'], $this->class);
         //Common::pr(Common::getSession($this->class));die;
         $currentPage = isset($_GET['currentPage']) ? $_GET['currentPage'] : 1;
-        $pagesize = isset($_GET['pagesize']) ? $_GET['pagesize'] : \mod\init::$config['page_width'];
+        $pagesize = isset($_GET['pagesize']) ? $_GET['pagesize'] : init::$config['page_width'];
         $keywords = isset($_GET['keywords']) ? $_GET['keywords'] : "";
         try {
             self::$data['data'] = UserDAL::getAll($currentPage, $pagesize, $keywords);
@@ -35,9 +37,9 @@ class user {
             self::$data['keywords'] = $keywords;
             self::$data['class'] = $this->class;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
         }
-        \mod\init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
+        init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
     }
 
     function getUser() {
@@ -52,9 +54,9 @@ class user {
             self::$data['list'] = RoleDAL::getAll(1, 99, "");
             self::$data['enterprise'] = EnterpriseDAL::getAll(1, 999, "");
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
         }
-        \mod\init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
+        init::getTemplate('admin', $this->class . '_' . __FUNCTION__);
     }
 
     function updateUser() {
@@ -85,13 +87,13 @@ class user {
             } else {
                 if (UserDAL::getByName($_POST['name'])) {
                     Common::js_alert(code::ALREADY_EXISTING_DATA);
-                    TigerDAL\CatchDAL::markError(code::$code[code::ALREADY_EXISTING_DATA], code::ALREADY_EXISTING_DATA, json_encode($_POST));
+                    CatchDAL::markError(code::$code[code::ALREADY_EXISTING_DATA], code::ALREADY_EXISTING_DATA, json_encode($_POST));
                     Common::js_redir(Common::getSession($this->class));
                 }
                 //Common::pr(UserDAL::getUser($_POST['name']));die;
                 $data = [
                     'name' => $_POST['name'],
-                    'password' => md5(\mod\init::$config['config']['password']),
+                    'password' => md5(init::$config['config']['password']),
                     'add_by' => Common::getSession("id"),
                     'add_time' => date("Y-m-d H:i:s"),
                     'edit_by' => Common::getSession("id"),
@@ -115,7 +117,7 @@ class user {
                 Common::js_alert('修改失败，请联系系统管理员');
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::USER_UPDATE], code::USER_UPDATE, json_encode($ex));
+            CatchDAL::markError(code::$code[code::USER_UPDATE], code::USER_UPDATE, json_encode($ex));
         }
     }
 
@@ -128,7 +130,7 @@ class user {
             }
             Common::js_redir(Common::getSession($this->class));
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::USER_DELETE], code::USER_DELETE, json_encode($ex));
+            CatchDAL::markError(code::$code[code::USER_DELETE], code::USER_DELETE, json_encode($ex));
         }
     }
 

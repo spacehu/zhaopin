@@ -1,7 +1,13 @@
 <?php
 
+use mod\common;
+
 class LOAD {
 
+    /**
+     * @param $class_name
+     * @return mixed
+     */
     static function loadClass($class_name) {
         $classArray = explode("\\", $class_name);
         if (is_array($classArray)) {
@@ -15,13 +21,12 @@ class LOAD {
             } else {
                 //print_r($url);die;
                 echo $class_name . '找不到';
-                \mod\common::js_alert_redir($class_name . ". 找不到", ERROR_404);
+                common::js_alert_redir($class_name . ". 找不到", ERROR_404);
                 exit;
             }
         } else {
-            echo $class_name . '错误';
+            exit($class_name . '错误');
         }
-        //print_r($classArray);die;
     }
 
 }

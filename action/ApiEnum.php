@@ -2,10 +2,10 @@
 
 namespace action;
 
-use mod\common as Common;
-use TigerDAL;
+use http\Exception;
 use TigerDAL\Api\EnumDAL;
 use config\code;
+use TigerDAL\CatchDAL;
 
 class ApiEnum {
 
@@ -27,7 +27,7 @@ class ApiEnum {
                 echo json_encode(['success' => false, 'message' => '查询失败，请联系系统管理员']);
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::API_ENUM], code::API_ENUM, json_encode($ex));
+            CatchDAL::markError(code::$code[code::API_ENUM], code::API_ENUM, json_encode($ex));
             echo json_encode(['success' => false, 'message' => '999']);
         }
     }

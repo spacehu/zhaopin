@@ -120,6 +120,7 @@ class BaseDAL {
      * @return bool|\mysqli_result
      */
     public function insert($data, $_db) {
+        $match=["NOW()"];
         if (is_array($data)) {
             $_data=[];
             foreach ($data as $v) {
@@ -127,6 +128,8 @@ class BaseDAL {
                     $_data[] = " " . $v . " ";
                 } else if (empty($v)) {
                     $_data[] = " null ";
+                } else if(in_array($v,$match)){
+                    $_data[] = " " . $v . " ";
                 } else {
                     $_data[] = " '" . $v . "' ";
                 }
@@ -147,6 +150,7 @@ class BaseDAL {
      * @return bool|\mysqli_result
      */
     public function update($id, $data, $_db) {
+        $match=["NOW()"];
         if (is_array($data)) {
             $_data=[];
             foreach ($data as $k => $v) {
@@ -154,6 +158,8 @@ class BaseDAL {
                     $_data[] = " `" . $k . "`=" . $v . " ";
                 } else if (empty($v)) {
                     $_data[] = " `" . $k . "`= null ";
+                } else if(in_array($v,$match)){
+                    $_data[] = " `" . $k . "`=" . $v . " ";
                 } else {
                     $_data[] = " `" . $k . "`='" . $v . "' ";
                 }

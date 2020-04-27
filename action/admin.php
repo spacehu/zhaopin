@@ -2,7 +2,11 @@
 
 namespace action;
 
+use config\code;
+use http\Exception;
 use mod\common as Common;
+use mod\init;
+use TigerDAL\CatchDAL;
 use TigerDAL\Cms\UserDAL;
 use TigerDAL\Cms\RoleDAL;
 use TigerDAL\Cms\EnterpriseDAL;
@@ -17,7 +21,7 @@ class admin {
 
     function index() {
         Common::isset_cookie();
-        \mod\init::getTemplate('admin', 'main', false);
+        init::getTemplate('admin', 'main', false);
     }
 
     function main_top() {
@@ -28,14 +32,14 @@ class admin {
             self::$data['data']['role'] = RoleDAL::getOne(self::$data['data']['role_id']);
             self::$data['data']['enterprise'] = EnterpriseDAL::getOne(self::$data['data']['enterprise_id']);
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::USER_INDEX], code::USER_INDEX, json_encode($ex));
         }
-        \mod\init::getTemplate('admin', 'top', false);
+        init::getTemplate('admin', 'top', false);
     }
 
     function main_right() {
         Common::isset_cookie();
-        \mod\init::getTemplate('admin', 'right', false);
+        init::getTemplate('admin', 'right', false);
     }
 
     function main_left() {
@@ -48,12 +52,12 @@ class admin {
             $_role=explode(";",$role['data']);
         }
         self::$data['role']=$_role;
-        self::$data['data']=\mod\init::$config['leftMenu'];
-        \mod\init::getTemplate('admin', 'left', false);
+        self::$data['data']= init::$config['leftMenu'];
+        init::getTemplate('admin', 'left', false);
     }
 
     function error() {
-        \mod\init::getTemplate('admin', 'error', false);
+        init::getTemplate('admin', 'error', false);
         exit;
     }
 

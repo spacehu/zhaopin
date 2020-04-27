@@ -65,7 +65,6 @@ class AccessDAL {
 
     function getOS() {
         $agent = $_SERVER['HTTP_USER_AGENT'];
-        $os = false;
 
         if (preg_match('/win/i', $agent) && strpos($agent, '95')) {
             $os = 'Windows 95';

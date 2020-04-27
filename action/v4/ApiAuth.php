@@ -5,6 +5,7 @@ namespace action\v4;
 use action\RestfulApi;
 use http\Exception;
 use mod\common as Common;
+use mod\init;
 use TigerDAL\Api\AuthDAL;
 use TigerDAL\Api\TokenDAL;
 use TigerDAL\Api\WeChatDAL;
@@ -60,12 +61,12 @@ class ApiAuth extends RestfulApi {
             $UserInfoDAL=new UserInfoDAL();
             if(!empty($this->user_id)){
                 // 判断是否是个人用户 查询出信息 否则返回该用户是企业用户 并提示前端进行页面跳转
-                if(!empty($this->server_id)&&$this->server_id==\mod\init::$config['token']['server_id']['customer']){
+                if(!empty($this->server_id)&&$this->server_id== init::$config['token']['server_id']['customer']){
                     $_dbUserInfo=$UserInfoDAL->getUser($this->user_id);
                     self::$data['success'] = true;
                     self::$data['data']=$_dbUserInfo;
                     self::$data['data']['token']=$this->header['token'];
-                }else if(!empty($this->server_id)&&$this->server_id==\mod\init::$config['token']['server_id']['business']){
+                }else if(!empty($this->server_id)&&$this->server_id== init::$config['token']['server_id']['business']){
                     self::$data['success']=false;
                     self::$data['data']['code'] = "business_user";
                     self::$data['msg']="该用户为企业用户";
@@ -142,7 +143,7 @@ class ApiAuth extends RestfulApi {
                 self::$data['success'] = true;
                 self::$data['data'] = $_dbUserInfo;
                 // 补上token
-                self::$data['data']['token'] = TokenDAL::saveToken($_dbUserInfo['id'], \mod\init::$config['token']['server_id']['customer']);
+                self::$data['data']['token'] = TokenDAL::saveToken($_dbUserInfo['id'], init::$config['token']['server_id']['customer']);
                 self::$data['data']['deathline'] = TokenDAL::getTimeOut();
                 
             }
@@ -186,12 +187,12 @@ class ApiAuth extends RestfulApi {
             // 判断是否已经登录 否则进入code判断
             if(!empty($this->user_id)){
                 // 判断是否是个人用户 查询出信息 否则返回该用户是企业用户 并提示前端进行页面跳转
-                if(!empty($this->server_id)&&$this->server_id==\mod\init::$config['token']['server_id']['customer']){
+                if(!empty($this->server_id)&&$this->server_id== init::$config['token']['server_id']['customer']){
                     self::$data['success']=false;
                     self::$data['data']['code'] = "customer_user";
                     self::$data['msg']="该用户为个人用户";
                     return self::$data;
-                }else if(!empty($this->server_id)&&$this->server_id==\mod\init::$config['token']['server_id']['business']){
+                }else if(!empty($this->server_id)&&$this->server_id== init::$config['token']['server_id']['business']){
                     $_dbUserInfo=$UserDAL->getUser($this->user_id);
                     self::$data['success'] = true;
                     self::$data['data']=$_dbUserInfo;
@@ -259,7 +260,7 @@ class ApiAuth extends RestfulApi {
                 self::$data['success'] = true;
                 self::$data['data'] = $_dbUserInfo;
                 // 补上token
-                self::$data['data']['token'] = TokenDAL::saveToken($_dbUserInfo['id'], \mod\init::$config['token']['server_id']['business']);
+                self::$data['data']['token'] = TokenDAL::saveToken($_dbUserInfo['id'], init::$config['token']['server_id']['business']);
                 self::$data['data']['deathline'] = TokenDAL::getTimeOut();
                 
             }else if(!empty($this->get['openid'])&&!empty($this->get['phone'])&&!empty($this->get['phoneCode'])){
@@ -295,7 +296,7 @@ class ApiAuth extends RestfulApi {
                 self::$data['success'] = true;
                 self::$data['data'] = $_dbUserInfo;
                 // 补上token
-                self::$data['data']['token'] = TokenDAL::saveToken($_dbUserInfo['id'], \mod\init::$config['token']['server_id']['business']);
+                self::$data['data']['token'] = TokenDAL::saveToken($_dbUserInfo['id'], init::$config['token']['server_id']['business']);
                 self::$data['data']['deathline'] = TokenDAL::getTimeOut();
             }
             
@@ -326,6 +327,7 @@ class ApiAuth extends RestfulApi {
             return self::$data;
         } catch (Exception $ex) {
             CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            exit;
         }
     }
 
@@ -437,7 +439,7 @@ class ApiAuth extends RestfulApi {
                     $wechat->updateWeChatUserInfo($result['id'], $_data);
                 }
                 self::$data['data']['code'] = $check['code'];
-                self::$data['data']['token'] = TokenDAL::saveToken($check['data']['id'], \mod\init::$config['token']['server_id']['customer']);
+                self::$data['data']['token'] = TokenDAL::saveToken($check['data']['id'], init::$config['token']['server_id']['customer']);
                 self::$data['data']['deathline'] = TokenDAL::getTimeOut();
             }
         } catch (Exception $ex) {

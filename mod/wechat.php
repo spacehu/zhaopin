@@ -2,8 +2,8 @@
 
 namespace mod;
 
-use mod\init as Init;
 use mod\common as Common;
+use TigerDAL\Api\LogDAL;
 
 class wechat {
 
@@ -14,13 +14,14 @@ class wechat {
     public $appid;                   //微信APPID，公众平台获取  
     public $appsecret;               //微信APPSECREC，公众平台获取  
     public $code;
+    private $access_token;
 
     function __construct() {
         $this->header = Common::exchangeHeader();
         $this->post = Common::exchangePost();
         $this->get = Common::exchangeGet();
-        $this->appid = \mod\init::$config['env']['wechat']['appid'];                   //微信APPID，公众平台获取  
-        $this->appsecret = \mod\init::$config['env']['wechat']['secret'];              //微信APPSECREC，公众平台获取  
+        $this->appid = init::$config['env']['wechat']['appid'];                   //微信APPID，公众平台获取
+        $this->appsecret = init::$config['env']['wechat']['secret'];              //微信APPSECREC，公众平台获取
     }
 
     
@@ -70,13 +71,14 @@ class wechat {
     }
 
     /**
-     * @explain 
-     * 通过code获取用户openid以及用户的微信号信息 
-     * @return 
-     * @remark 
-     * 获取到用户的openid之后可以判断用户是否有数据，可以直接跳过获取access_token,也可以继续获取access_token 
-     * access_token每日获取次数是有限制的，access_token有时间限制，可以存储到数据库7200s. 7200s后access_token失效 
-     * */
+     * @explain
+     * 通过code获取用户openid以及用户的微信号信息
+     * @param $access_token
+     * @return mixed
+     * @remark
+     * 获取到用户的openid之后可以判断用户是否有数据，可以直接跳过获取access_token,也可以继续获取access_token
+     * access_token每日获取次数是有限制的，access_token有时间限制，可以存储到数据库7200s. 7200s后access_token失效
+     */
     public function getUserInfo($access_token) {
         if(!empty($access_token)){
             $this->access_token=$access_token;
@@ -115,9 +117,12 @@ class wechat {
     }
 
     /**
-     * @explain 
-     * 发送http请求，并返回数据 
-     * */
+     * @explain
+     * 发送http请求，并返回数据
+     * @param $url
+     * @param null $data
+     * @return mixed
+     */
     public function https_request($url, $data = null) {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);

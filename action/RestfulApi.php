@@ -7,11 +7,12 @@
 
 namespace action;
 
+use http\Exception;
 use mod\common as Common;
-use TigerDAL;
-use TigerDAL\Api\SmsDAL;
+use mod\init;
 use TigerDAL\AccessDAL;
 use config\code;
+use TigerDAL\CatchDAL;
 use TigerDAL\Web\StatisticsDAL;
 use TigerDAL\Api\LogDAL;
 
@@ -38,13 +39,13 @@ class RestfulApi {
         $this->post = Common::exchangePost();
         $this->get = Common::exchangeGet();
         $this->insertStatistics($_SERVER);
-        if (\mod\init::$config['restful_api']['isopen']) {
+        if (init::$config['restful_api']['isopen']) {
             try {
                 LogDAL::save(date("Y-m-d H:i:s") . "-------------------------------------" . $this->_path . "", "DEBUG");
                 LogDAL::save(date("Y-m-d H:i:s") . "-------------------------------------" . Common::getIP() . "", "DEBUG");
                 LogDAL::save(date("Y-m-d H:i:s") . "-------------------------------------" . json_encode($this->post) . "", "DEBUG");
-                if (!empty(\mod\init::$config['restful_api']['path'][$this->_method . ' ' . $this->_path])) {
-                    return \mod\init::$config['restful_api']['path'][$this->_method . ' ' . $this->_path];
+                if (!empty(init::$config['restful_api']['path'][$this->_method . ' ' . $this->_path])) {
+                    return init::$config['restful_api']['path'][$this->_method . ' ' . $this->_path];
                 } else {
                     self::$data['success'] = false;
                     self::$data['data']['code'] = "url is wrong.";
@@ -60,15 +61,15 @@ class RestfulApi {
         } else {
             return false;
         }
-        //Common::pr($this);
-        exit();
     }
 
     function __destruct() {
         LogDAL::_saveLog();
     }
 
-    /** 记录日志 */
+    /** 记录日志
+     * @param $method
+     */
     private function insertStatistics($method) {
         $access = new AccessDAL();
         $statistics = new StatisticsDAL();
@@ -87,26 +88,17 @@ class RestfulApi {
         $statistics->insert($data);
     }
 
-    /** 基类 测试用 -废弃 */
-    function get() {
-        try {
-            //Common::pr($_SERVER);
-        } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::API_ENUM], code::API_ENUM, json_encode($ex));
-            echo json_encode(['success' => false, 'message' => '999']);
-        }
-    }
 
     /** 获取请求头 */
     function getMethod() {
         try {
             return $_SERVER['REQUEST_METHOD'];
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::API_ENUM], code::API_ENUM, json_encode($ex));
+            CatchDAL::markError(code::$code[code::API_ENUM], code::API_ENUM, json_encode($ex));
             self::$data['success'] = false;
             self::$data['data']['code'] = json_encode($ex);
             self::$data['msg'] = code::$code['systemerror'];
-            echo json_encode(self::$data);
+            exit(json_encode(self::$data));
         }
     }
 
@@ -125,11 +117,11 @@ class RestfulApi {
             }
             return $_path[0];
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::API_ENUM], code::API_ENUM, json_encode($ex));
+            CatchDAL::markError(code::$code[code::API_ENUM], code::API_ENUM, json_encode($ex));
             self::$data['success'] = false;
             self::$data['data']['code'] = json_encode($ex);
             self::$data['msg'] = code::$code['systemerror'];
-            echo json_encode(self::$data);
+            exit(json_encode(self::$data));
         }
     }
 

@@ -9,23 +9,27 @@ namespace TigerDAL;
  *
  */
 
+use config\code;
+use http\Exception;
+use PHPMailer;
+use phpmailerException;
+
 class MailDAL {
 
     //默认方法
     function __construct() {
-        require_once("./lib/phpmailer/class.phpmailer.php");
     }
 
-    /*
+    /**
      * 执行邮件发送的方法
-     * fromInfo提供发件人信息
-     * maildetail提供邮件内容
+     * @param $fromInfo
+     * @param $maildetail 
+     * @return bool
      */
-
     function mailTo($fromInfo, $maildetail) {
         try{
             if (!empty($fromInfo["out_put_email"])) {
-                $mail = new \PHPMailer();
+                $mail = new PHPMailer();
                 $mail->CharSet = "utf-8";
                 $mail->IsSMTP();
                 $mail->SMTPSecure = "ssl";
@@ -49,7 +53,12 @@ class MailDAL {
                 $mail->Body = $maildetail['body']; //邮件正文
                 //$data['con']=$mail;
                 //return $mail;
-                return $mail->Send();
+                try {
+                    return $mail->Send();
+                } catch (phpmailerException $e) {
+                    CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($e));
+                    exit;
+                }
             } else {
                 //return mail();
                 $to = $maildetail['user_email'];
@@ -61,7 +70,8 @@ class MailDAL {
                 return mail($to, $subject, $body, $headers);
             }
         }catch(Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            exit;
         }
     }
 

@@ -2,16 +2,18 @@
 
 namespace action\v4;
 
+use action\RestfulApi;
+use http\Exception;
 use mod\common as Common;
 use TigerDAL\Api\TokenDAL;
 use TigerDAL\Api\CourseDAL;
 use TigerDAL\Api\LessonDAL;
+use TigerDAL\CatchDAL;
 use TigerDAL\Cms\LessonImageDAL;
 use TigerDAL\Api\TestDAL;
-use TigerDAL\Api\AccountDAL;
 use config\code;
 
-class ApiCourse extends \action\RestfulApi {
+class ApiCourse extends RestfulApi {
 
     public $user_id;
     public $server_id;
@@ -29,8 +31,8 @@ class ApiCourse extends \action\RestfulApi {
         $this->server_id = 0;
         if (!empty($path)) {
             $_path = explode("-", $path);
-            $actEval = "\$res = \$this ->" . $_path['2'] . "();";
-            eval($actEval);
+            $mod= $_path['2'];
+            $res=$this->$mod();
             exit(json_encode($res));
         }
     }
@@ -55,7 +57,7 @@ class ApiCourse extends \action\RestfulApi {
             self::$data['data']['list'] = $res;
             self::$data['data']['total'] = $total;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
@@ -77,7 +79,7 @@ class ApiCourse extends \action\RestfulApi {
             //print_r($res);die;
             self::$data['data'] = $res;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
@@ -109,7 +111,7 @@ class ApiCourse extends \action\RestfulApi {
             self::$data['data']['list'] = $res;
             self::$data['data']['total'] = $total;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
@@ -133,7 +135,7 @@ class ApiCourse extends \action\RestfulApi {
             self::$data['data'] = $res;
             self::$data['data']['images'] = $images;
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
@@ -159,7 +161,7 @@ class ApiCourse extends \action\RestfulApi {
             self::$data['data']['total'] = count($res);
             self::$data['data']['max'] = $_obj['text_max'];
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
         return self::$data;
     }
