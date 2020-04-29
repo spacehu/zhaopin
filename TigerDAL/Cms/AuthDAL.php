@@ -6,7 +6,10 @@ use TigerDAL\BaseDAL;
 
 class AuthDAL {
 
-    /** 获取用户信息 */
+    /** 获取用户信息
+     * @param $name
+     * @return array|bool|null
+     */
     public static function getByName($name) {
         $base = new BaseDAL();
         $sql = "select u.*,count(*) as num,r.level "

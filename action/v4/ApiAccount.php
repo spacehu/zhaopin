@@ -169,8 +169,13 @@ class ApiAccount extends RestfulApi {
         try {
             //轮播列表
             $res = ResumeDAL::sendResume($this->user_id, $this->post['article_id']);
-
-            //print_r($res);die;
+            if($res===code::NULL_DATA){
+                self::$data['success']=false;
+                self::$data['data']['error_msg'] = 'emptyUserResume';
+                self::$data['data']['code'] = $res;
+                self::$data['msg'] = code::$code[$res];
+                return self::$data;
+            }
             self::$data['data'] = $res;
         } catch (Exception $ex) {
             CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));

@@ -31,7 +31,6 @@ $class = \action\slideShow::$data['class'];
             <table class="mytable" cellspacing="0" >
                 <tr bgcolor="#656565" style=" font-weight:bold; color:#FFFFFF;">
                     <td class="td1" >排序</td>
-                    <td class="td1" width="10%">属于</td>
                     <td class="td1" width="20%">操作</td>
                 </tr>
                 <?php
@@ -41,10 +40,9 @@ $class = \action\slideShow::$data['class'];
                         ?>
                         <tr<?php if ($sum_i % 2 != 1) { ?>  class="tr2"<?php } ?>>
                             <td class="td1"><?php echo $v['order_by']; ?></td>
-                            <td class="td1"><?php echo $v['add_by']; ?></td>
                             <td class="td1">
                                 <a href="index.php?a=<?php echo $class; ?>&m=getSlideShow&id=<?php echo $v['id']; ?>">编辑</a>
-                                <a href="index.php?a=<?php echo $class; ?>&m=deleteSlideShow&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此轮播删除?')">删除</a>
+                                <a class="del" href="index.php?a=<?php echo $class; ?>&m=deleteSlideShow&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此轮播删除?')">删除</a>
                             </td>
                         </tr>
                         <?php

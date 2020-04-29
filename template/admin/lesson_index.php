@@ -56,7 +56,7 @@ $cat_id = \action\lesson::$data['cat_id'];
                             <td class="td1">
                                 <a href="index.php?a=test&m=index&lesson_id=<?php echo $v['id']; ?>&course_id=<?php echo $course_id;?>&cat_id=<?php echo $cat_id;?>">试题</a>
                                 | <a href="index.php?a=<?php echo $class; ?>&m=getLesson&course_id=<?php echo $course_id; ?>&id=<?php echo $v['id']; ?>">编辑</a>
-                                | <a href="index.php?a=<?php echo $class; ?>&m=deleteLesson&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此课时删除?')">删除</a></td>
+                                | <a class="del" href="index.php?a=<?php echo $class; ?>&m=deleteLesson&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此课时删除?')">删除</a></td>
                         </tr>
                         <?php
                         $sum_i++;

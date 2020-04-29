@@ -14,7 +14,8 @@ use TigerDAL\cli\LogDAL as cLogDAL;
  * 继承数据库包
  */
 
-class BaseDAL {
+class BaseDAL
+{
 
     //表名
     public $tab_name;
@@ -24,15 +25,15 @@ class BaseDAL {
     private $log;
 
     //默认方法
-    function __construct($_LOG = "DEBUG") {
+    function __construct($_LOG = "DEBUG")
+    {
         $this->tab_name = init::$config['mysql']['table_pre'];
-        $this->conn = init::$config['mysql']['conn'];
-        //var_dump($this->conn);
         $this->log = $_LOG;
-        init::$config['mysql']['conn'] = $this->mysqlStart();
+        $this->mysqlStart();
     }
 
-    function __destruct() {
+    function __destruct()
+    {
         if ($this->log == 'cli') {
             cLogDAL::save(date("Y-m-d H:i:s") . "-sql---" . json_encode($this->sql) . "", $this->log);
         } else {
@@ -41,13 +42,14 @@ class BaseDAL {
     }
 
     /** 创建mysql链接 */
-    private function mysqlStart() {
+    private function mysqlStart()
+    {
         try {
             $conn = mysqli_connect(
                 init::$config['mysql']['host'], init::$config['mysql']['user'], init::$config['mysql']['password'], init::$config['mysql']['dbName'], init::$config['mysql']['port']
             );
             mysqli_query($conn, "set names utf8");
-            return $conn;
+            $this->conn = $conn;
         } catch (Exception $ex) {
             var_dump($ex);
             exit;
@@ -58,7 +60,8 @@ class BaseDAL {
      * @param $sql
      * @return array|bool
      */
-    public function getFetchAll($sql) {
+    public function getFetchAll($sql)
+    {
         $result = $this->query($sql);
         if (!empty($result)) {
             while ($row = mysqli_fetch_assoc($result)) {
@@ -76,7 +79,8 @@ class BaseDAL {
      * @param $sql
      * @return array|bool|null
      */
-    public function getFetchRow($sql) {
+    public function getFetchRow($sql)
+    {
         $result = $this->query($sql);
         if (!empty($result)) {
             while ($row = mysqli_fetch_assoc($result)) {
@@ -94,7 +98,8 @@ class BaseDAL {
      * @param $sql
      * @return bool|\mysqli_result
      */
-    public function query($sql) {
+    public function query($sql)
+    {
         $this->sql .= $sql;
         $result = mysqli_query($this->conn, $sql);
         return $result;
@@ -104,13 +109,15 @@ class BaseDAL {
      * @param $name
      * @return string
      */
-    public function table_name($name) {
+    public function table_name($name)
+    {
         $ls = $this->tab_name . $name;
         return $ls;
     }
 
     /** 获取mysql最近一条的id */
-    public function last_insert_id() {
+    public function last_insert_id()
+    {
         return mysqli_insert_id($this->conn);
     }
 
@@ -119,16 +126,17 @@ class BaseDAL {
      * @param $_db
      * @return bool|\mysqli_result
      */
-    public function insert($data, $_db) {
-        $match=["NOW()"];
+    public function insert($data, $_db)
+    {
+        $match = ["NOW()"];
         if (is_array($data)) {
-            $_data=[];
+            $_data = [];
             foreach ($data as $v) {
                 if (is_numeric($v)) {
                     $_data[] = " " . $v . " ";
                 } else if (empty($v)) {
                     $_data[] = " null ";
-                } else if(in_array($v,$match)){
+                } else if (in_array($v, $match)) {
                     $_data[] = " " . $v . " ";
                 } else {
                     $_data[] = " '" . $v . "' ";
@@ -149,16 +157,17 @@ class BaseDAL {
      * @param $_db
      * @return bool|\mysqli_result
      */
-    public function update($id, $data, $_db) {
-        $match=["NOW()"];
+    public function update($id, $data, $_db)
+    {
+        $match = ["NOW()"];
         if (is_array($data)) {
-            $_data=[];
+            $_data = [];
             foreach ($data as $k => $v) {
                 if (is_numeric($v)) {
                     $_data[] = " `" . $k . "`=" . $v . " ";
                 } else if (empty($v)) {
                     $_data[] = " `" . $k . "`= null ";
-                } else if(in_array($v,$match)){
+                } else if (in_array($v, $match)) {
                     $_data[] = " `" . $k . "`=" . $v . " ";
                 } else {
                     $_data[] = " `" . $k . "`='" . $v . "' ";

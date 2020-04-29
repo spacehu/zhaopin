@@ -45,7 +45,7 @@ $department_id = \action\position::$data['department_id'];
                                 ?></td>
                             <td class="td1">
                                 <a href="index.php?a=<?php echo $class; ?>&m=getPosition&id=<?php echo $v['id']; ?>&department_id=<?php echo $department_id; ?>">编辑</a>
-                                | <a href="index.php?a=<?php echo $class; ?>&m=deletePosition&id=<?php echo $v['id']; ?>&department_id=<?php echo $department_id; ?>" onclick="return confirm('确定将此职位删除?')">删除</a></td>
+                                | <a class="del" href="index.php?a=<?php echo $class; ?>&m=deletePosition&id=<?php echo $v['id']; ?>&department_id=<?php echo $department_id; ?>" onclick="return confirm('确定将此职位删除?')">删除</a></td>
                         </tr>
                         <?php
                         $sum_i++;

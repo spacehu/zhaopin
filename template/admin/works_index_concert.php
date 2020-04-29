@@ -46,7 +46,7 @@ $class = \action\works::$data['class'];
                             <td class="td1"><?php echo $v['add_by']; ?></td>
                             <td class="td1">
                                 <a href="index.php?a=<?php echo $class; ?>&m=getConcert&id=<?php echo $v['id']; ?>">编辑</a>
-                                <a href="index.php?a=<?php echo $class; ?>&m=deleteConcert&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此演唱会删除?')">删除</a>
+                                <a class="del" href="index.php?a=<?php echo $class; ?>&m=deleteConcert&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此演唱会删除?')">删除</a>
                             </td>
                         </tr>
                         <?php

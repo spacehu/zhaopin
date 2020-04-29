@@ -2,11 +2,15 @@
 
 namespace TigerDAL\Api;
 
+use config\code;
 use TigerDAL\BaseDAL;
 
 class ResumeDAL {
 
-    /** 获取用户信息 */
+    /** 获取用户信息
+     * @param $user_id
+     * @return array|bool|null
+     */
     public static function getOne($user_id) {
         $base = new BaseDAL();
         $sql = "select r.* from " . $base->table_name("user_resume") . " as r "
@@ -28,7 +32,10 @@ class ResumeDAL {
         return $res;
     }
 
-    /** 写入简历信息 */
+    /** 写入简历信息
+     * @param $_data
+     * @return int|string
+     */
     public static function saveOne($_data) {
         $base = new BaseDAL();
         $sql = "select * from " . $base->table_name("user_resume") . " as r where r.user_id=" . $_data['user_id'] . " ;";
@@ -44,7 +51,10 @@ class ResumeDAL {
         return $resume_id;
     }
 
-    /** 写入简历信息 */
+    /** 写入简历信息
+     * @param $_school
+     * @return int|string
+     */
     public static function saveOneSchool($_school) {
         $base = new BaseDAL();
         $sql = "select * from " . $base->table_name("user_resume_school") . " as r where r.user_id=" . $_school['user_id'] . " and r.id=" . $_school['id'] . " ;";
@@ -60,7 +70,10 @@ class ResumeDAL {
         return $resume_id;
     }
 
-    /** 写入简历信息 */
+    /** 写入简历信息
+     * @param $_company
+     * @return int|string
+     */
     public static function saveOneCompany($_company) {
         $base = new BaseDAL();
         $sql = "select * from " . $base->table_name("user_resume_company") . " as r where r.user_id=" . $_company['user_id'] . " and r.id=" . $_company['id'] . " ;";
@@ -76,7 +89,10 @@ class ResumeDAL {
         return $resume_id;
     }
 
-    /** 写入简历信息 */
+    /** 写入简历信息
+     * @param $_project
+     * @return int|string
+     */
     public static function saveOneProject($_project) {
         $base = new BaseDAL();
         $sql = "select * from " . $base->table_name("user_resume_project") . " as r where r.user_id=" . $_project['user_id'] . " and r.id=" . $_project['id'] . " ;";
@@ -92,13 +108,20 @@ class ResumeDAL {
         return $resume_id;
     }
 
-    /** 投递简历 */
+    /** 投递简历
+     * @param $user_id
+     * @param $article_id
+     * @return bool
+     */
     public static function sendResume($user_id, $article_id) {
         $base = new BaseDAL();
         $sql = "select * from " . $base->table_name('user_resume_article') . " where user_id=" . $user_id . " and article_id=" . $article_id . " ;";
         $row = $base->getFetchRow($sql);
         if (empty($row)) {
             $resume = self::getOne($user_id);
+            if(!$resume){
+                return code::NULL_DATA;
+            }
             $_data = [
                 'user_id' => $user_id,
                 'user_resume_id' => $resume['id'],

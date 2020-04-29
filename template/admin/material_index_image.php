@@ -159,7 +159,7 @@ $class = \action\material::$data['class'];
                             <div class="img-name"><?php echo $v['name']?></div>
                             <div class="img-edit-btn">
                                 <a href="index.php?a=<?php echo $class; ?>&m=getImage&id=<?php echo $v['id']; ?>" class="img-edit">编辑</a>
-                                <a href="index.php?a=<?php echo $class; ?>&m=deleteImage&id=<?php echo $v['id']; ?>" class="img-dlt" onclick="return confirm('确定将此素材删除?')">删除</a>
+                                <a class="del" href="index.php?a=<?php echo $class; ?>&m=deleteImage&id=<?php echo $v['id']; ?>" class="img-dlt" onclick="return confirm('确定将此素材删除?')">删除</a>
                             </div>
                         </div>
                     </div>

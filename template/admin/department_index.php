@@ -44,7 +44,7 @@ $enterprise_id = \action\department::$data['enterprise_id'];
                             <td class="td1">
                                 <a href="index.php?a=position&m=index&department_id=<?php echo $v['id']; ?>">职位</a>
                                 | <a href="index.php?a=<?php echo $class; ?>&m=getDepartment&id=<?php echo $v['id']; ?>">编辑</a>
-                                | <a href="index.php?a=<?php echo $class; ?>&m=deleteDepartment&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此部门删除?')">删除</a></td>
+                                | <a class="del" href="index.php?a=<?php echo $class; ?>&m=deleteDepartment&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此部门删除?')">删除</a></td>
                         </tr>
                         <?php
                         $sum_i++;

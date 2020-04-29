@@ -42,7 +42,7 @@ $class = \action\brand::$data['class'];
                                 ?></td>
                             <td class="td1">
                                 <a href="index.php?a=<?php echo $class; ?>&m=getBrand&id=<?php echo $v['id']; ?>">编辑</a>
-                                | <a href="index.php?a=<?php echo $class; ?>&m=deleteBrand&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此品牌删除?')">删除</a></td>
+                                | <a class="del" href="index.php?a=<?php echo $class; ?>&m=deleteBrand&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此品牌删除?')">删除</a></td>
                         </tr>
                         <?php
                         $sum_i++;

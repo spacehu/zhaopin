@@ -47,7 +47,7 @@ $class = \action\role::$data['class'];
                             <td class="td1"><?php echo $v['level']; ?></td>
                             <td class="td1">
                                 <a href="index.php?a=<?php echo $class; ?>&m=getRole&id=<?php echo $v['id']; ?>">编辑</a>
-                                <a href="index.php?a=<?php echo $class; ?>&m=deleteRole&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此角色删除?')">删除</a>
+                                <a class="del" href="index.php?a=<?php echo $class; ?>&m=deleteRole&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此角色删除?')">删除</a>
                             </td>
                         </tr>
                         <?php

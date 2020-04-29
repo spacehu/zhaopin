@@ -47,7 +47,7 @@ $class = \action\user::$data['class'];
                             <td class="td1"><?php echo $v['rname']; ?></td>
                             <td class="td1">
                                 <a href="index.php?a=<?php echo $class; ?>&m=getUser&id=<?php echo $v['id']; ?>">编辑</a>
-                                <a href="index.php?a=<?php echo $class; ?>&m=deleteUser&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此分类删除?')">删除</a>
+                                <a class="del" href="index.php?a=<?php echo $class; ?>&m=deleteUser&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此分类删除?')">删除</a>
                             </td>
                         </tr>
                         <?php

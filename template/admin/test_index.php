@@ -72,7 +72,7 @@ $categorys = \action\test::$data['categorys'];
                                 ?></td>
                             <td class="td1">
                                 <a href="index.php?a=<?php echo $class; ?>&m=getTest&lesson_id=<?php echo $lesson_id; ?>&id=<?php echo $v['id']; ?>">编辑</a>
-                                | <a href="index.php?a=<?php echo $class; ?>&m=deleteTest&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此试题删除?')">删除</a></td>
+                                | <a class="del" href="index.php?a=<?php echo $class; ?>&m=deleteTest&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此试题删除?')">删除</a></td>
                         </tr>
                         <?php
                         $sum_i++;

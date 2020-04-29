@@ -16,6 +16,7 @@ define('ERROR_405', './index.php?a=admin&m=error&message=405');
 define('ERROR_404', './index.php?a=admin&m=error&message=404');
 /** cli 配置信息 */
 define('APP_SRC', '/var/www/plbs');
+define('DOCUMENT_ROOT',$_SERVER['DOCUMENT_ROOT']);
 
 
 

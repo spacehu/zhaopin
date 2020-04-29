@@ -52,7 +52,7 @@ $enterprise = \action\user::$data['enterprise'];
                 <div class="pathA ">
                     <div class="leftA">
                         <div class="leftAlist" >
-                            <span>NAME 用户名</span>
+                            <span>手机号（用户名）</span>
                         </div>
                         <div class="leftAlist" >
                             <div class="r_row">
@@ -76,7 +76,7 @@ $enterprise = \action\user::$data['enterprise'];
                             </div>
                         </div>
                         <div class="leftAlist" >
-                            <span><input type="checkbox" name="is_email" <?php echo ($data['is_email'] == 0) ? '' : 'checked'; ?>>是否发送学习报告</span>
+                            <span><input type="checkbox" name="is_email" <?php echo ($data['is_email'] == 0) ? '' : 'checked'; ?>>是否发报告</span>
                         </div>
                         <div class="leftAlist" >
                             <div class="r_row">

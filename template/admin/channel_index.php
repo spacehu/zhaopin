@@ -37,7 +37,7 @@ $class = \action\channel::$data['class'];
                             <td class="td1"><?php echo $v['code']; ?></td>
                             <td class="td1">
                                 <a href="index.php?a=<?php echo $class; ?>&m=getChannel&id=<?php echo $v['id']; ?>">编辑</a>
-                                | <a href="index.php?a=<?php echo $class; ?>&m=deleteChannel&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此分类删除?')">删除</a></td>
+                                | <a class="del" href="index.php?a=<?php echo $class; ?>&m=deleteChannel&id=<?php echo $v['id']; ?>" onclick="return confirm('确定将此分类删除?')">删除</a></td>
                         </tr>
                         <?php
                         $sum_i++;

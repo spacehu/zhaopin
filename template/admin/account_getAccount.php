@@ -17,12 +17,17 @@ $data = \action\account::$data['data'];
                 <div class="pathA ">
                     <div class="leftA">
                         <div class="leftAlist" >
-                            <span>PASSWORD 密码</span>
+                            <span>密码</span>
                         </div>
                         <div class="leftAlist" >
                             <div class="r_row">
                                 <input class="text" name="password" type="password" value="" />
                             </div>
+                        </div>
+                        <div class="leftAlist" >
+                            <span>确认密码</span>
+                        </div>
+                        <div class="leftAlist" >
                             <div class="r_row">
                                 <input class="text" name="password_cfn" type="password" value="" />
                             </div>

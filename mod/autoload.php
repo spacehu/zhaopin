@@ -11,7 +11,7 @@ class LOAD {
     static function loadClass($class_name) {
         $classArray = explode("\\", $class_name);
         if (is_array($classArray)) {
-            $url = '.';
+            $url = DOCUMENT_ROOT.'';
             foreach ($classArray as $k => $v) {
                 $url .= '/' . $v;
             }
