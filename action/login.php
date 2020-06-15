@@ -2,7 +2,9 @@
 
 namespace action;
 
+use http\Exception;
 use mod\common as Common;
+use mod\init;
 use TigerDAL\Cms\AuthDAL;
 
 class login {
@@ -15,7 +17,7 @@ class login {
      * 用户登录界面显示
      */
     function login() {
-        \mod\init::getTemplate('./', 'login', false);
+        init::getTemplate('./', 'login', false);
     }
 
     /**

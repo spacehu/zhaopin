@@ -135,7 +135,9 @@ class common {
             $sessiont = Init::$config['cookie_life_time'];
         }
         try {
-            session_set_cookie_params($sessiont);
+            if(!isset($_SESSION)){
+                session_set_cookie_params($sessiont);
+            }
             @session_start();
             $_SESSION[Init::$config['shop_name']][$session_name] = $session_value;
             session_write_close();

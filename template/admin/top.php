@@ -15,7 +15,7 @@ $data = \action\admin::$data['data'];
                 <a href="javascript:void(0);" onclick="javascript:parent.mainFrame.location.href = 'index.php?a=admin&m=main_right';parent.leftFrame.location.href = 'index.php?a=admin&m=main_left'" ><img src="img/logo.png" /></a>
             </div>
             <div class="topMap">
-                <p><?php echo $data['enterprise']['name'] . $data['name']; ?>，您好！</p>
+                <p><?php echo $data['enterprise']['name']?$data['enterprise']['name']:"" . $data['name']; ?>，您好！</p>
                 <a onclick="javascript:parent.mainFrame.location.href = '<?php echo \mod\common::url_rewrite("index.php?a=login&m=logOff"); ?>'">SIGN OFF 签出</a>
             </div>
         </div>

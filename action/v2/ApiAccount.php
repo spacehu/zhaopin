@@ -2,12 +2,15 @@
 
 namespace action\v2;
 
+use action\RestfulApi;
+use http\Exception;
 use mod\common as Common;
+use TigerDAL\CatchDAL;
 use TigerDAL\Web\AccountDAL;
 use TigerDAL\Web\PointDAL;
 use config\code;
 
-class ApiHome extends \action\RestfulApi {
+class ApiHome extends RestfulApi {
 
     public $post;
     public $get;
@@ -23,8 +26,8 @@ class ApiHome extends \action\RestfulApi {
         $this->header = Common::exchangeHeader();
         if (!empty($path)) {
             $_path = explode("-", $path);
-            $actEval = "\$res = \$this ->" . $_path['2'] . "();";
-            eval($actEval);
+            $mod= $_path['2'];
+            $res=$this->$mod();
             exit(json_encode($res));
         }
     }
@@ -91,7 +94,7 @@ class ApiHome extends \action\RestfulApi {
                 exit(json_encode("errorSql"));
             }
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
     }
 
@@ -134,7 +137,7 @@ class ApiHome extends \action\RestfulApi {
             }
             exit(json_encode(self::$res));
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
     }
 
@@ -146,7 +149,7 @@ class ApiHome extends \action\RestfulApi {
             Common::destorySession();
             Common::js_redir("./");
         } catch (Exception $ex) {
-            TigerDAL\CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }
     }
 

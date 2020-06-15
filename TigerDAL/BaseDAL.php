@@ -4,6 +4,7 @@ namespace TigerDAL;
 
 use http\Exception;
 use mod\init;
+use mysqli;
 use TigerDAL\Api\LogDAL;
 use TigerDAL\cli\LogDAL as cLogDAL;
 
@@ -45,10 +46,14 @@ class BaseDAL
     private function mysqlStart()
     {
         try {
-            $conn = mysqli_connect(
-                init::$config['mysql']['host'], init::$config['mysql']['user'], init::$config['mysql']['password'], init::$config['mysql']['dbName'], init::$config['mysql']['port']
+            $conn = new mysqli(
+                init::$config['mysql']['host'],
+                init::$config['mysql']['user'],
+                init::$config['mysql']['password'],
+                init::$config['mysql']['dbName'],
+                init::$config['mysql']['port']
             );
-            mysqli_query($conn, "set names utf8");
+            $conn->query("set names utf8");
             $this->conn = $conn;
         } catch (Exception $ex) {
             var_dump($ex);
@@ -64,7 +69,7 @@ class BaseDAL
     {
         $result = $this->query($sql);
         if (!empty($result)) {
-            while ($row = mysqli_fetch_assoc($result)) {
+            while ($row = $result->fetch_assoc()) {
                 $data[] = $row;
             }
         }
@@ -83,7 +88,7 @@ class BaseDAL
     {
         $result = $this->query($sql);
         if (!empty($result)) {
-            while ($row = mysqli_fetch_assoc($result)) {
+            while ($row = $result->fetch_assoc()) {
                 $data = $row;
             }
         }
@@ -101,8 +106,7 @@ class BaseDAL
     public function query($sql)
     {
         $this->sql .= $sql;
-        $result = mysqli_query($this->conn, $sql);
-        return $result;
+        return $this->conn->query($sql);
     }
 
     /** 设置表名
@@ -111,14 +115,13 @@ class BaseDAL
      */
     public function table_name($name)
     {
-        $ls = $this->tab_name . $name;
-        return $ls;
+        return $this->tab_name . $name;
     }
 
     /** 获取mysql最近一条的id */
     public function last_insert_id()
     {
-        return mysqli_insert_id($this->conn);
+        return $this->conn->insert_id;
     }
 
     /** 新增用户信息
