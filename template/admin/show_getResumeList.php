@@ -33,6 +33,7 @@ $id = \action\show::$data['id'];
                             <td class="td1"><?php echo $v['name']; ?></td>
                             <td class="td1">
                                 <a href="index.php?a=<?php echo $class; ?>&m=getUserResume&user_id=<?php echo $v['user_id']; ?>">查看</a>
+                                <a href="index.php?a=<?php echo $class; ?>&m=getUserResume&user_id=<?php echo $v['user_id']; ?>&export=2">导出</a>
                                 <a class="del" href="index.php?a=<?php echo $class; ?>&m=deleteUserResumeArticle&ura_id=<?php echo $v['ura_id']; ?>&article_id=<?php echo $id;?>" onclick="return confirm('确定将此次简历删除?')">删除</a>
                             </td>
                         </tr>

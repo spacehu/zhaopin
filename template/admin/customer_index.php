@@ -49,6 +49,7 @@ $class = \action\customer::$data['class'];
                             <td class="td1"><?php echo $v['add_time']; ?></td>
                             <td class="td1">
                                 <a href="index.php?a=show&m=getUserResume&user_id=<?php echo $v['id']; ?>">查看简历</a>
+                                <a href="index.php?a=show&m=getUserResume&user_id=<?php echo $v['id']; ?>&export=2">导出简历</a>
                                 <!--
                                 <a href="index.php?a=<?php echo $class; ?>&m=getCustomer&id=<?php echo $v['id']; ?>">查看</a>
                                 -->

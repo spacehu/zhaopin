@@ -4,6 +4,7 @@ namespace action;
 
 use http\Exception;
 use mod\common as Common;
+use mod\csv;
 use mod\init;
 use TigerDAL\CatchDAL;
 use TigerDAL\Cms\EnumDAL;
@@ -197,8 +198,41 @@ class show {
     function getUserResume() {
         $user_id = isset($_GET['user_id']) ? $_GET['user_id'] : null;
         try {
-            self::$data['data'] = UserResumeArticleDAL::getOne($user_id);
-            //Common::pr(self::$data['data']);die;
+            self::$data['data'] = $data = UserResumeArticleDAL::getOne($user_id);
+            //Common::pr($data);die;
+            if(!empty($_GET['export'])&&$_GET['export']==2){
+                $headlist=[
+                    ['简历编号',$data['id']],
+                ];
+                $_data=[
+                    ['姓名',$data['name']],
+                    ['生日',$data['brithday']],
+                    ['Email',$data['email']],
+                    ['电话号',$data['phone']],
+                    ['自我简介',$data['about_self']],
+                ];
+                if(!empty($data['school'])){
+                    $_data[]=['教育经历'];
+                    $_data[]=['毕业学校','攻读专业','就读年份（起）','就读年份（止）','最高学位'];
+                    foreach($data['school'] as $k=>$v){
+                        $_data[]=[
+                            $v['school'],$v['profession'],$v['start_time'],$v['end_time'],$v['education'],
+                        ];
+                    }
+                }
+                if(!empty($data['company'])){
+                    $_data[]=['工作经历'];
+                    $_data[]=['所在公司','所在职位','在职时间（起）','在职时间（止）','工作内容'];
+                    foreach($data['company'] as $k=>$v){
+                        $_data[]=[
+                            $v['company'],$v['job'],$v['start_time'],$v['end_time'],$v['infomation'],
+                        ];
+                    }
+                }
+                $csv=new Csv();
+                $csv->mkcsvMore($_data,$headlist,"getCustomerResume-".$user_id."-".$data['name']."-".date("YmdHis"));
+                exit();
+            }
             self::$data['class'] = $this->class;
         } catch (Exception $ex) {
             CatchDAL::markError(code::$code[code::SHOW_INDEX], code::SHOW_INDEX, json_encode($ex));

@@ -13,7 +13,7 @@ class UserResumeArticleDAL {
         $sql = "select r.*,ura.id as ura_id from " . $base->table_name("user_resume") . " as r "
                 . "left join " . $base->table_name("user_resume_article") . " as ura on ura.user_resume_id=r.id "
                 . "where r.`delete`=0 and ura.`delete`=0 and ura.article_id=" . $article_id . " "
-                . "order by r.edit_time desc limit " . $limit_start . "," . $limit_end . " ;";
+                . "order by r.id desc limit " . $limit_start . "," . $limit_end . " ;";
         $res = $base->getFetchAll($sql);
         return $res;
     }

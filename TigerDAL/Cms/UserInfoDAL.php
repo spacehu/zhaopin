@@ -23,8 +23,8 @@ class UserInfoDAL {
                 . " left join ".$base->table_name("user_resume_article")." as ura on ura.user_id=ui.id "
                 . " left join ".$base->table_name("article")." as a on a.id=ura.article_id and a.`delete`=0 "
                 . " LEFT join " . $base->table_name("enterprise") . " as e on e.id=a.enterprise_id and e.`delete`=0 "
-                . " where ura.`delete` = 0 " . $where . " "
-                . " order by ui.edit_time desc limit " . $limit_start . "," . $limit_end . " ;";
+                . " where ura.`delete` = 0 and ura.user_resume_id>0 " . $where . " "
+                . " order by ui.id desc limit " . $limit_start . "," . $limit_end . " ;";
         //echo $sql;
         return $base->getFetchAll($sql);
     }
@@ -44,7 +44,7 @@ class UserInfoDAL {
                 . " left join ".$base->table_name("user_resume_article")." as ura on ura.user_id=ui.id "
                 . " left join ".$base->table_name("article")." as a on a.id=ura.article_id and a.`delete`=0 "
                 . " LEFT join " . $base->table_name("enterprise") . " as e on e.id=a.enterprise_id and e.`delete`=0 "
-                . " where ura.`delete` = 0 " . $where . "  ;";
+                . " where ura.`delete` = 0 and ura.user_resume_id>0 " . $where . "  ;";
         return $base->getFetchRow($sql)['total'];
     }
 

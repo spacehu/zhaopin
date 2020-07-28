@@ -22,7 +22,7 @@ class ArticleDAL {
             $where .= " and a.enterprise_id = '" . $enterprise_id . "' and e.`delete`=0 ";
         }
         $sql = "select a.*,count(ura.id) as resumeCount,e.`name` as eName from " . $base->table_name("article") . " as a "
-                . "left join " . $base->table_name("user_resume_article") . " as ura on a.id=ura.article_id "
+                . "left join " . $base->table_name("user_resume_article") . " as ura on a.id=ura.article_id and ura.`delete`=0 and ura.user_resume_id>0 "
                 . "left join ".$base->table_name("enterprise")." as e on e.id=a.enterprise_id "
                 . "where a.`delete`=0 " . $where . " "
                 . "group by a.id "

@@ -112,12 +112,12 @@ $data = \action\show::$data['data'];
                 <?php } ?>
             </div>
         </div>
+        <?php if (!empty($data['company'])) { ?>
         <div class="status r_top">
             <p>工作经历</p>
         </div>
         <div class="content">
             <div class="pathA ">
-                <?php if (!empty($data['company'])) { ?>
                     <?php foreach ($data['company'] as $k => $v) { ?>
                         <div class="leftA">
                             <div class="leftAlist" >
@@ -154,15 +154,15 @@ $data = \action\show::$data['data'];
                             </div>
                         </div>
                     <?php } ?>
-                <?php } ?>
             </div>
         </div>
+        <?php } ?>
+        <?php if (!empty($data['project'])) { ?>
         <div class="status r_top">
             <p>项目经历</p>
         </div>
         <div class="content">
             <div class="pathA ">
-                <?php if (!empty($data['project'])) { ?>
                     <?php foreach ($data['project'] as $k => $v) { ?>
                         <div class="leftA">
                             <div class="leftAlist" >
@@ -191,8 +191,8 @@ $data = \action\show::$data['data'];
                             </div>
                         </div>
                     <?php } ?>
-                <?php } ?>
             </div>
         </div>
+        <?php } ?>
     </body>
 </html>
