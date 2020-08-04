@@ -139,6 +139,9 @@ return $config = [
             'DELETE /v4/ApiArticle-support.htm' => 'v4-ApiArticle-deleteSupport', //关闭文章
             'GET /v4/ApiAccount-supports.htm' => 'v4-ApiAccount-getResumedSupports', //获取已经投递过简历的职位列表
             'GET /v4/ApiAccount-supportsTotal.htm' => 'v4-ApiAccount-getResumedSupportsTotal', //获取已经投递过简历的职位列表
+            'GET /v4/ApiAccount-resumeds.htm' => 'v4-ApiAccount-getResumedList', //b: 获取投递过的列表
+            'GET /v4/ApiAccount-resumed.htm' => 'v4-ApiAccount-getResumed', //b: 获取投递过的
+
 
 
         ]

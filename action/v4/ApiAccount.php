@@ -4,6 +4,7 @@ namespace action\v4;
 
 use action\RestfulApi;
 use http\Exception;
+use mod\common;
 use mod\init;
 use TigerDAL\Api\AuthDAL;
 use TigerDAL\Api\TokenDAL;
@@ -16,7 +17,9 @@ use TigerDAL\Api\ResumeDAL;
 use TigerDAL\Api\LogDAL;
 use TigerDAL\CatchDAL;
 use TigerDAL\Cms\UserDAL;
+use TigerDAL\Cms\UserInfoDAL as cmsUserInfoDAL;
 use TigerDAL\Cms\EnterpriseDAL as cmsEnterpriseDAL;
+use TigerDAL\Cms\UserResumeArticleDAL as cmsUserResumeArticleDAL;
 use config\code;
 
 class ApiAccount extends RestfulApi {
@@ -638,6 +641,33 @@ class ApiAccount extends RestfulApi {
             //print_r($res);die;
             self::$data['data']['list'] = $res;
             self::$data['data']['total'] = $resT;
+        } catch (Exception $ex) {
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+        }
+        return self::$data;
+    }
+
+    /** 企业主：已投递的简历列表 */
+    function getResumedList() {
+        $currentPage = isset($this->get['currentPage']) ? $this->get['currentPage'] : 1;
+        $pagesize = isset($this->get['pagesize']) ? $this->get['pagesize'] : init::$config['page_width'];
+        $enterprise_id = EnterpriseDAL::getByUserId($this->user_id)['id'];
+        try {
+            //轮播列表
+
+            self::$data['data']['list'] = cmsUserInfoDAL::getAll($currentPage, $pagesize, '', $enterprise_id);
+            self::$data['data']['total'] = cmsUserInfoDAL::getTotal('', $enterprise_id);
+
+        } catch (Exception $ex) {
+            CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
+        }
+        return self::$data;
+    }
+    /** 企业主：已投递的简历 */
+    function getResumed() {
+        $user_id = $this->get['user_id'];
+        try {
+            self::$data['data'] = cmsUserResumeArticleDAL::getOne($user_id);
         } catch (Exception $ex) {
             CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
         }

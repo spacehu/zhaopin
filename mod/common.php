@@ -311,7 +311,7 @@ class common {
      * 获取url 参数方法
      */
     public static function exchangeGet() {
-        $res = "";
+        $res = [];
         $url = $_SERVER['REQUEST_URI'];
         $get = explode("?", $url);
         if (!empty($get[1])) {
