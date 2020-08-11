@@ -29,6 +29,31 @@ class UserResumeArticleDAL {
         return $base->getFetchRow($sql)['total'];
     }
 
+    /** 获取 user_resume list */
+    public static function getArticlesResumeList($currentPage, $pagesize, $enterprise_id) {
+        $base = new BaseDAL();
+        $limit_start = ($currentPage - 1) * $pagesize;
+        $limit_end = $pagesize;
+        $sql = "select ur.*,e.`name` as eName,a.`name` as aName "
+            . " from " . $base->table_name("user_resume") . " as ur "
+            . " left join ".$base->table_name("user_resume_article")." as ura on ura.user_id=ur.user_id "
+            . " left join ".$base->table_name("article")." as a on a.id=ura.article_id and a.`delete`=0 "
+            . " LEFT join " . $base->table_name("enterprise") . " as e on e.id=a.enterprise_id and e.`delete`=0 "
+            . " where ura.`delete` = 0 and ura.user_resume_id>0 and a.enterprise_id=" . $enterprise_id . " "
+            . " order by ur.id desc limit " . $limit_start . "," . $limit_end . " ;";
+        return $base->getFetchAll($sql);
+    }
+    /** 获取 user_resume list total */
+    public static function getArticlesResumeListTotal($enterprise_id) {
+        $base = new BaseDAL();
+        $sql = "select count(1) as total "
+            . " from " . $base->table_name("user_resume") . " as ur "
+            . " left join ".$base->table_name("user_resume_article")." as ura on ura.user_id=ur.user_id "
+            . " left join ".$base->table_name("article")." as a on a.id=ura.article_id and a.`delete`=0 "
+            . " LEFT join " . $base->table_name("enterprise") . " as e on e.id=a.enterprise_id and e.`delete`=0 "
+            . " where ura.`delete` = 0 and ura.user_resume_id>0 and a.enterprise_id=" . $enterprise_id . " ;";
+        return $base->getFetchRow($sql)['total'];
+    }
     /** 获取用户信息 */
     public static function getOne($user_id) {
         $base = new BaseDAL();

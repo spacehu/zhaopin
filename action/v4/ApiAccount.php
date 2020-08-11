@@ -655,8 +655,8 @@ class ApiAccount extends RestfulApi {
         try {
             //轮播列表
 
-            self::$data['data']['list'] = cmsUserInfoDAL::getAll($currentPage, $pagesize, '', $enterprise_id);
-            self::$data['data']['total'] = cmsUserInfoDAL::getTotal('', $enterprise_id);
+            self::$data['data']['list'] = cmsUserResumeArticleDAL::getArticlesResumeList($currentPage, $pagesize,$enterprise_id);
+            self::$data['data']['total'] = cmsUserResumeArticleDAL::getArticlesResumeListTotal($enterprise_id);
 
         } catch (Exception $ex) {
             CatchDAL::markError(code::$code[code::HOME_INDEX], code::HOME_INDEX, json_encode($ex));
